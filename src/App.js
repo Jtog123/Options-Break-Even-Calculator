@@ -85,7 +85,7 @@ function BuyingPut(strikePrice, premium) {
 
 function App() {
   return (
-    <div className="App">
+    <div className="App flex ">
       <MainPage/>
     </div>
   );
