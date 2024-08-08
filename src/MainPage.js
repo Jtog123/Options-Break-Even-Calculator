@@ -4,6 +4,39 @@ function MainPage() {
     const [selectedStrategy, setSelectedStrategy] = useState("");
     const [selectedContracts, setSelectedContracts] = useState([]);
 
+    const[numContracts, setNumContracts] = useState(1);
+
+    const handleIncrementClick = () => {
+        
+        setNumContracts((prevNumContracts) => {
+            if(prevNumContracts >= 999) {
+                return 999;
+            }
+            return prevNumContracts + 1;
+        })
+    }
+
+    const handleDecrementClick = () => {
+        setNumContracts((prevNumContracts) => {
+            if(prevNumContracts <= 1) {
+                return 1;
+            }
+            return prevNumContracts - 1;
+        })
+    }
+
+    const handleInputChange = (e) => {
+        let value = parseInt(e.target.value, 10);
+        if(isNaN(value)) {
+            value = 1;
+        } else if(value < 1) {
+            value = 1;
+        } else if (value > 999) {
+            value = 999
+        }
+        setNumContracts(value);
+    }
+
     const strategies = {
         "Buy Call(s)": 1,
         "Vertical Spread": 2,
@@ -24,13 +57,20 @@ function MainPage() {
 
     const handleCheckboxChange = (contractId) => {
         setSelectedContracts((prevSelectedContracts) => {
-            if (prevSelectedContracts.includes(contractId)) {
+            const isSelected = prevSelectedContracts.includes(contractId);
+
+            const maxSelections = strategies[selectedStrategy];
+
+            if(isSelected) {
                 return prevSelectedContracts.filter(id => id !== contractId);
-            } else if (prevSelectedContracts.length < strategies[selectedStrategy]) {
-                return [...prevSelectedContracts, contractId];
-            } else {
-                return prevSelectedContracts;
             }
+
+            if(prevSelectedContracts.length < maxSelections) {
+                return [...prevSelectedContracts, contractId]
+            }
+
+            return prevSelectedContracts;
+
         });
     };
 
@@ -149,6 +189,42 @@ function MainPage() {
                         </tbody>
                     </table>
                 </div>
+
+                <div className='h-10 text-white bg-purple-400 mt-10  '>
+                    <h1 className='text-3xl ml-2 w-1/3'>
+                        Breakeven
+                    </h1>
+                </div>
+                <div className="price-box contracts text-white bg-orange-300 flex items-center">
+                    <h1 className='text-xl ml-2 w-1/2'>
+                        $171.61
+                    </h1>
+                    <h2 className='num-contracts w-1/5 text-xl'>
+                        Num Contracts
+                    </h2>
+                    <div className="number-box flex">
+                        <button 
+                            className='text-xl bg-gray-300 w-8 h-8 text-center'
+                            onClick={handleDecrementClick}
+                        >
+                            -
+                        </button>
+                        <input 
+                            className='bg-white text-black text-xl w-12 text-center'
+                            value={numContracts}
+                            type='number'
+                            onChange={handleInputChange}
+                        />
+                        <button 
+                            className='text-xl bg-gray-300 w-8 h-8 text-center'
+                            onClick={handleIncrementClick}
+                        >
+                                +
+                        </button>
+                    </div>
+                    
+                </div>
+
             </div>
         </div>
     );
