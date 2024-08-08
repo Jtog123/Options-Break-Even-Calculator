@@ -18,7 +18,7 @@ acess token tradier
 IoOPt3pGDto6RAr8ok0cVyaslEOp
 
 */
-
+const apiKyy = process.env.REACT_APP_TRADIER_ACCESS_TOKEN
 
 function CoveredCall(stockPrice, premium) {
   var breakEven = stockPrice - premium

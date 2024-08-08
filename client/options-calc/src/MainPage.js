@@ -1,4 +1,15 @@
 import React, { useState } from 'react';
+import axios from 'axios'
+
+
+
+/*
+On a search get Symbol data and option chain data
+If ticker doesnt exist note couldnt find ticker
+
+On click, send get request to tradier for the ticker symbol and the option chain
+do i need to use axios to make this request
+*/
 
 function MainPage() {
     const [selectedStrategy, setSelectedStrategy] = useState("");
@@ -77,6 +88,40 @@ function MainPage() {
         });
     };
 
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('https://sandbox.tradier.com/v1/markets/options/lookup', {
+                headers: {
+                    'Authorization': `Bearer ${process.env.TRADIER_ACCESS_TOKEN}`,
+                    'Accept': 'application/json'
+                },
+                params: {
+                    'underlying': 'SPY'
+                }
+            });
+
+            console.log(response.status);
+            console.log(response.data);
+            
+
+        } catch(err) {
+            console.error("error fetching hmmm", err.response)
+        }
+    };
+
+
+    const handleSearchClick = async (e) => {
+        e.preventDefault();
+        console.log("Searching")
+        try {
+            const data = await fetchData();
+            console.log(data);
+        } catch(err) {
+            console.error('Error fetching data', err)
+        }
+
+    }
+
     return (
         <div className="outer-container h-screen bg-blue-200 flex justify-center items-center w-full">
             <div className="bg-black h-5/6 w-5/6 md:w-4/6">
@@ -85,16 +130,25 @@ function MainPage() {
                         <span className="absolute inset-y-0 left-0 bg-green-400 flex items-center text-black z-10 p-2">
                             symbol
                         </span>
-                        <input
-                            className="h-10 text-xl w-full mr-16 pl-20"
-                            type="text"
-                            required
-                        />
-                        <span className="absolute inset-y-0 right-0 flex items-center">
-                            <button className="z-10 bg-green-400 h-full p-2">
-                                search
-                            </button>
-                        </span>
+                        <form 
+                            action=""
+                            onSubmit={handleSearchClick}
+                        >
+                            <input
+                                className="h-10 text-xl w-full mr-16 pl-20"
+                                type="text"
+                                required
+                            />
+                            <span className="absolute inset-y-0 right-0 flex items-center">
+                                <button 
+                                    className="z-10 bg-green-400 h-full p-2"
+                                    type='submit'
+                                >
+                                    search
+                                </button>
+                            </span>
+                        </form>
+
                     </div>
                 </div>
 
@@ -215,7 +269,7 @@ function MainPage() {
                         <input 
                             className='bg-white text-black text-xl w-12 text-center'
                             value={numContracts}
-                            type='number'
+                            type='text'
                             onChange={handleInputChange}
                         />
                         <button 
