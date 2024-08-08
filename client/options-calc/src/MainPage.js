@@ -17,6 +17,8 @@ function MainPage() {
 
     const[numContracts, setNumContracts] = useState(1);
 
+    const[tickerInput, setTickerInput] = useState("");
+
     const handleIncrementClick = () => {
         
         setNumContracts((prevNumContracts) => {
@@ -88,37 +90,23 @@ function MainPage() {
         });
     };
 
-    const fetchData = async () => {
-        try {
-            const response = await axios.get('https://sandbox.tradier.com/v1/markets/options/lookup', {
-                headers: {
-                    'Authorization': `Bearer ${process.env.TRADIER_ACCESS_TOKEN}`,
-                    'Accept': 'application/json'
-                },
-                params: {
-                    'underlying': 'SPY'
-                }
-            });
-
-            console.log(response.status);
-            console.log(response.data);
-            
-
-        } catch(err) {
-            console.error("error fetching hmmm", err.response)
-        }
-    };
+    
 
 
     const handleSearchClick = async (e) => {
         e.preventDefault();
-        console.log("Searching")
+        console.log("Searching");
+        let res = await axios.post('http://localhost:5000/input', {tickerSymbol: tickerInput}, {withCredentials: true})
+        console.log("myres is: ", res.data);
+        
+        /*
         try {
             const data = await fetchData();
             console.log(data);
         } catch(err) {
             console.error('Error fetching data', err)
         }
+        */
 
     }
 
@@ -137,6 +125,8 @@ function MainPage() {
                             <input
                                 className="h-10 text-xl w-full mr-16 pl-20"
                                 type="text"
+                                value ={tickerInput}
+                                onChange={(e) => setTickerInput(e.target.value)}
                                 required
                             />
                             <span className="absolute inset-y-0 right-0 flex items-center">
@@ -156,6 +146,7 @@ function MainPage() {
                     <div className="ticker-stock-info bg-red-300">
                         <h1 className="text-2xl ml-2">
                             BA
+                            {tickerInput}
                         </h1>
                         <div className="text-xs ml-2">
                             Boeing Co.
