@@ -39,6 +39,7 @@ function MainPage() {
 
     const strategies = {
         "Buy Call(s)": 1,
+        "Buy Puts(s)": 1,
         "Vertical Spread": 2,
         "Butterfly Spread": 3,
         "Iron Condor": 4,
@@ -47,6 +48,8 @@ function MainPage() {
     const contracts = [
         { id: 1, callBid: "Value 1", callAsk: "Value 2", callDelta: "Value 3", callIV: "Value 4", strike: "Value 5", putBid: "Value 6", putAsk: "Value 7", putDelta: "Value 8", putIV: "Value 9" },
         { id: 2, callBid: "Value 10", callAsk: "Value 11", callDelta: "Value 12", callIV: "Value 13", strike: "Value 14", putBid: "Value 15", putAsk: "Value 16", putDelta: "Value 17", putIV: "Value 18" },
+        { id: 3, callBid: "Value 19", callAsk: "Value 20", callDelta: "Value 21", callIV: "Value 22", strike: "Value 23", putBid: "24", putAsk: "25", putDelta: "26", putIV: "27" },
+        { id: 4, callBid: "Value 10", callAsk: "Value 11", callDelta: "Value 12", callIV: "Value 13", strike: "Value 14", putBid: "Value 15", putAsk: "Value 16", putDelta: "Value 17", putIV: "Value 18" },
         // Add more contract data as needed
     ];
 
@@ -196,13 +199,13 @@ function MainPage() {
                     </h1>
                 </div>
                 <div className="price-box contracts text-white bg-orange-300 flex items-center">
-                    <h1 className='text-xl ml-2 w-1/2'>
+                    <h1 className='text-xl ml-2 w-1/3  md:w-1/2 '>
                         $171.61
                     </h1>
-                    <h2 className='num-contracts w-1/5 text-xl'>
+                    <h2 className='num-contracts w-1/5 text-xl mr-8 sm:mr-8 '>
                         Num Contracts
                     </h2>
-                    <div className="number-box flex">
+                    <div className="number-box flex w-1/3 ">
                         <button 
                             className='text-xl bg-gray-300 w-8 h-8 text-center'
                             onClick={handleDecrementClick}
