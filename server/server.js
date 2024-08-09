@@ -15,24 +15,72 @@ router.post('/input', async (req, res) => {
     const {tickerSymbol} = req.body;
     console.log(tickerSymbol)
     try{
-        const response = await axios.get('https://sandbox.tradier.com/v1/markets/quotes', {
-            params: {
-                'symbols': `${tickerSymbol}`,
-                'greeks': 'false'
-            },
-            headers: {
-                'Authorization': `Bearer ${process.env.TRADIER_ACCESS_TOKEN}`,
-                'Accept': 'application/json'
-            }
-        })
-        //console.log(response.data)
-        let ticker = response.data['quotes']['quote']['symbol']
-        let companyName = response.data['quotes']['quote']['description']
-        let currentPrice = response.data['quotes']['quote']['last']
-        let bidPrice = response.data['quotes']['quote']['bid']
-        let askPrice = response.data['quotes']['quote']['ask']
+        const[quoteResponse, expirationResponse ,chainResponse] = await Promise.all([
+            axios.get('https://sandbox.tradier.com/v1/markets/quotes', {
+                params: {
+                    'symbols': `${tickerSymbol}`,
+                    'greeks': 'false'
+                },
+                headers: {
+                    'Authorization': `Bearer ${process.env.TRADIER_ACCESS_TOKEN}`,
+                    'Accept': 'application/json'
+                }
+            }),
+            axios.get('https://sandbox.tradier.com/v1/markets/options/expirations', {
+                params: {
+                    'symbol': `${tickerSymbol}`,
+                    'includeAllRoots': 'true',
+                    'strikes': 'false',
+                }, 
+                headers: {
+                    'Authorization': `Bearer ${process.env.TRADIER_ACCESS_TOKEN}`,
+                    'Accept': 'application/json'               
+                }
+            }),
+            axios.get('https://sandbox.tradier.com/v1/markets/options/chains', {
+                params: {
+                    'symbol': `${tickerSymbol}`,
+                    'expiration': '2024-09-24'
+                    
+                },
+                headers: {
+                    'Authorization': `Bearer ${process.env.TRADIER_ACCESS_TOKEN}`,
+                    'Accept': 'application/json'                    
+                }
+            })
+            
+        ])
+        let ticker = quoteResponse.data.quotes.quote.symbol;
+        let companyName = quoteResponse.data.quotes.quote.description;
+        let currentPrice = quoteResponse.data.quotes.quote.last;
+        let bidPrice = quoteResponse.data.quotes.quote.bid;
+        let askPrice = quoteResponse.data.quotes.quote.ask;
 
-        res.send({ticker, companyName, currentPrice, bidPrice, askPrice});
+        let expirations = expirationResponse.data.expirations.date;
+        console.log(expirations)
+    
+
+        //we have to have user select the stock
+        // then they select their option exipration date from the stock
+        // after we return exipration data they pick an exipration date
+        //after picking exipration date we send that back and load option chain data
+
+  
+        //console.log(chainResponse.data)
+
+
+        res.send({
+            ticker, 
+            companyName, 
+            currentPrice, 
+            bidPrice, 
+            askPrice,
+            expirations
+            
+        });
+
+        //const chainResponse = await axios.get('https://sandbox.tradier.com/v1/markets/options/chains')
+        //console.log(chainResponse)
         
     } catch (err) {
         console.error('Sorry error', err)
