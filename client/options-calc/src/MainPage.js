@@ -15,9 +15,11 @@ function MainPage() {
     const [selectedStrategy, setSelectedStrategy] = useState("");
     const [selectedContracts, setSelectedContracts] = useState([]);
 
-    const[numContracts, setNumContracts] = useState(1);
+    const [numContracts, setNumContracts] = useState(1);
 
-    const[tickerInput, setTickerInput] = useState("");
+    const [tickerInput, setTickerInput] = useState("");
+    const [ticker, setTicker] = useState("");
+    const [company, setCompany] = useState("");
 
     const handleIncrementClick = () => {
         
@@ -96,9 +98,23 @@ function MainPage() {
     const handleSearchClick = async (e) => {
         e.preventDefault();
         console.log("Searching");
-        let res = await axios.post('http://localhost:5000/input', {tickerSymbol: tickerInput}, {withCredentials: true})
-        console.log("myres is: ", res.data);
+        try {
+            let res = await axios.post('http://localhost:5000/input', {tickerSymbol: tickerInput}, {withCredentials: true})
+            console.log("myres is: ", res.data);
+            if(res.data) { 
+                setTicker(res.data['ticker'])
+                setCompany(res.data['companyName'])
+            } else {
+                console.log("No Valid ticker received")
+            }
+        } catch (err) {
+            console.error('Error fetching data')
+        }
+
         
+        //only after we get a response with the ticker should we set
+        // the ticker symbol and load the option chain, dont set it as user is tpying
+
         /*
         try {
             const data = await fetchData();
@@ -108,7 +124,7 @@ function MainPage() {
         }
         */
 
-    }
+    };
 
     return (
         <div className="outer-container h-screen bg-blue-200 flex justify-center items-center w-full">
@@ -145,11 +161,11 @@ function MainPage() {
                 <div className="stock-info mt-4 text-black w-full bg-blue-300 min-h-14 flex space-x-10">
                     <div className="ticker-stock-info bg-red-300">
                         <h1 className="text-2xl ml-2">
-                            BA
-                            {tickerInput}
+                            {ticker}
+                            
                         </h1>
                         <div className="text-xs ml-2">
-                            Boeing Co.
+                            {company}
                         </div>
                     </div>
                     <div className="stock-price-info bg-yellow-300">

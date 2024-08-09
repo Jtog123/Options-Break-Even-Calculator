@@ -11,26 +11,35 @@ const apiKey = process.env.TRADIER_ACCESS_TOKEN;
 
 app.use(express.json());
 
-//now use the requests data to make a request to Tradier API
-//send the ticker to tradier api make sure it exists
-//
+router.post('/input', async (req, res) => {
+    const {tickerSymbol} = req.body;
+    console.log(tickerSymbol)
+    try{
+        const response = await axios.get('https://sandbox.tradier.com/v1/markets/quotes', {
+            params: {
+                'symbols': `${tickerSymbol}`,
+                'greeks': 'false'
+            },
+            headers: {
+                'Authorization': `Bearer ${process.env.TRADIER_ACCESS_TOKEN}`,
+                'Accept': 'application/json'
+            }
+        })
+        
+        let ticker = response.data['quotes']['quote']['symbol']
+        let companyName = response.data['quotes']['quote']['description']
+
+        res.send({ticker, companyName});
+        
+    } catch (err) {
+        console.error('Sorry error', err)
+    }
+})
 
 /*
-    const fetchData = async () => {
-        try {
-            const response = await axios.get('https://sandbox.tradier.com/v1/markets/options/lookup', {
-                headers: {
-                    'Authorization': `Bearer ${process.env.TRADIER_ACCESS_TOKEN}`,
-                    'Accept': 'application/json'
-                },
-                params: {
-                    'underlying': 'tickerSymbol'
-                }
-            });
-*/
-
 router.post('/input', async (req, res) => {
-    console.log(req.body)
+    //console.log("req body is", req.body)
+    
     const {tickerSymbol} = req.body;
     try{
         const response = await axios.get('https://sandbox.tradier.com/v1/markets/options/lookup', {
@@ -43,13 +52,14 @@ router.post('/input', async (req, res) => {
             }
         });
 
+        console.log(response.data['symbols'][0])
         console.log(response.data['symbols'][0]['rootSymbol'])
         res.send(response.data['symbols'][0]['rootSymbol']);
     } catch(err) {
         console.log(err);
     }
 })
-
+*/
 
 app.use(cors({
     origin: 'http://localhost:3000',
