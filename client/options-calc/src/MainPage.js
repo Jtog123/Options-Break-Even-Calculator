@@ -19,7 +19,11 @@ function MainPage() {
 
     const [tickerInput, setTickerInput] = useState("");
     const [ticker, setTicker] = useState("");
-    const [company, setCompany] = useState("");
+    const [company, setCompany] = useState("TICKER");
+    const [currentPrice, setCurrentPrice] = useState("-");
+    const [bidPrice, setBidPrice] = useState("-");
+    const [askPrice, setAskPrice] = useState("-");
+
 
     const handleIncrementClick = () => {
         
@@ -102,8 +106,11 @@ function MainPage() {
             let res = await axios.post('http://localhost:5000/input', {tickerSymbol: tickerInput}, {withCredentials: true})
             console.log("myres is: ", res.data);
             if(res.data) { 
-                setTicker(res.data['ticker'])
-                setCompany(res.data['companyName'])
+                setTicker(res.data['ticker']);
+                setCompany(res.data['companyName']);
+                setCurrentPrice(res.data['currentPrice']);
+                setBidPrice(res.data['bidPrice']);
+                setAskPrice(res.data['askPrice']);
             } else {
                 console.log("No Valid ticker received")
             }
@@ -170,7 +177,7 @@ function MainPage() {
                     </div>
                     <div className="stock-price-info bg-yellow-300">
                         <h1 className="mt-1">
-                            $163.79
+                            {currentPrice}
                         </h1>
                     </div>
                     <div className="bid-ask-info bg-yellow-300 flex justify-center flex-col">
@@ -183,10 +190,10 @@ function MainPage() {
                     </div>
                     <div className="bid-ask-price-info bg-yellow-300 flex justify-center flex-col">
                         <h1 className="bid bg-red-300 text-md">
-                            $163.65
+                            {bidPrice}
                         </h1>
                         <h1 className="bid bg-green-300 text-md">
-                            $163.89
+                            {askPrice}
                         </h1>
                     </div>
                 </div>

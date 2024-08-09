@@ -25,11 +25,14 @@ router.post('/input', async (req, res) => {
                 'Accept': 'application/json'
             }
         })
-        
+        //console.log(response.data)
         let ticker = response.data['quotes']['quote']['symbol']
         let companyName = response.data['quotes']['quote']['description']
+        let currentPrice = response.data['quotes']['quote']['last']
+        let bidPrice = response.data['quotes']['quote']['bid']
+        let askPrice = response.data['quotes']['quote']['ask']
 
-        res.send({ticker, companyName});
+        res.send({ticker, companyName, currentPrice, bidPrice, askPrice});
         
     } catch (err) {
         console.error('Sorry error', err)
