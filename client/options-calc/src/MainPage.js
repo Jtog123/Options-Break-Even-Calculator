@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 
 
@@ -13,9 +13,15 @@ do i need to use axios to make this request
 
 function MainPage() {
     const [selectedStrategy, setSelectedStrategy] = useState("");
+
+    const [expirations, setExpirations] = useState([]);
+    const [selectedExpiration, setSelectedExpiration] = useState("");
     const [selectedContracts, setSelectedContracts] = useState([]);
 
     const [numContracts, setNumContracts] = useState(1);
+
+    const[optionsData, setOptionsData] = useState([]);
+    
 
     const [tickerInput, setTickerInput] = useState("");
     const [ticker, setTicker] = useState("");
@@ -24,6 +30,25 @@ function MainPage() {
     const [bidPrice, setBidPrice] = useState("-");
     const [askPrice, setAskPrice] = useState("-");
 
+    useEffect(() => {
+        console.log('optionsData updated:', optionsData);
+    }, [optionsData]);
+
+    const strategies = {
+        "Buy Call(s)": 1,
+        "Buy Puts(s)": 1,
+        "Vertical Spread": 2,
+        "Butterfly Spread": 3,
+        "Iron Condor": 4,
+    };
+
+    const contracts = [
+        { id: 1, callBid: "Value 1", callAsk: "Value 2", callDelta: "Value 3", callIV: "Value 4", strike: "Value 5", putBid: "Value 6", putAsk: "Value 7", putDelta: "Value 8", putIV: "Value 9" },
+        { id: 2, callBid: "Value 10", callAsk: "Value 11", callDelta: "Value 12", callIV: "Value 13", strike: "Value 14", putBid: "Value 15", putAsk: "Value 16", putDelta: "Value 17", putIV: "Value 18" },
+        { id: 3, callBid: "Value 19", callAsk: "Value 20", callDelta: "Value 21", callIV: "Value 22", strike: "Value 23", putBid: "24", putAsk: "25", putDelta: "26", putIV: "27" },
+        { id: 4, callBid: "Value 10", callAsk: "Value 11", callDelta: "Value 12", callIV: "Value 13", strike: "Value 14", putBid: "Value 15", putAsk: "Value 16", putDelta: "Value 17", putIV: "Value 18" },
+        // Add more contract data as needed
+    ];
 
     const handleIncrementClick = () => {
         
@@ -56,21 +81,9 @@ function MainPage() {
         setNumContracts(value);
     }
 
-    const strategies = {
-        "Buy Call(s)": 1,
-        "Buy Puts(s)": 1,
-        "Vertical Spread": 2,
-        "Butterfly Spread": 3,
-        "Iron Condor": 4,
-    };
 
-    const contracts = [
-        { id: 1, callBid: "Value 1", callAsk: "Value 2", callDelta: "Value 3", callIV: "Value 4", strike: "Value 5", putBid: "Value 6", putAsk: "Value 7", putDelta: "Value 8", putIV: "Value 9" },
-        { id: 2, callBid: "Value 10", callAsk: "Value 11", callDelta: "Value 12", callIV: "Value 13", strike: "Value 14", putBid: "Value 15", putAsk: "Value 16", putDelta: "Value 17", putIV: "Value 18" },
-        { id: 3, callBid: "Value 19", callAsk: "Value 20", callDelta: "Value 21", callIV: "Value 22", strike: "Value 23", putBid: "24", putAsk: "25", putDelta: "26", putIV: "27" },
-        { id: 4, callBid: "Value 10", callAsk: "Value 11", callDelta: "Value 12", callIV: "Value 13", strike: "Value 14", putBid: "Value 15", putAsk: "Value 16", putDelta: "Value 17", putIV: "Value 18" },
-        // Add more contract data as needed
-    ];
+
+
 
     const handleStrategyChange = (e) => {
         setSelectedStrategy(e.target.value);
@@ -96,28 +109,115 @@ function MainPage() {
         });
     };
 
-    
+    // split these organizeOptionChainResponse(optionChain);
 
+    const handleExpirationChange = async (e) => {
+        //once we set the expiration we send a request over with the ticker and the expiration and retreieve the option chain
+
+        const newExpiration = e.target.value;
+        setSelectedExpiration(newExpiration);
+
+        try{
+            const response = await axios.post('http://localhost:5000/expirations', {
+                tickerInput: ticker,
+                expirationTime: newExpiration,
+                
+            },
+            {withCredentials:true} 
+        );
+        organizeOptionChainResponse( response.data.options)
+        
+        /*
+        //split here send over response.data.options.
+        const organizedOptions = response.data.options.reduce((acc, option) => {
+            //unpack values
+            const {strike, type, bid, ask, delta, iv} = option;
+
+            //not sure
+            if (!acc[strike]) {
+                acc[strike] = {strike, call:{}, put:{}};
+            }
+
+            if(type === 'call') {
+                acc[strike].call = {bid, ask, delta, iv};
+            } else if (type === 'put') {
+                acc[strike].put = {bid, ask, delta, iv};
+            }
+
+            return acc;
+        }, {});
+        
+
+        setOptionsData(Object.values(organizedOptions));
+        */
+        //setOptionsData(response.data);  
+        //console.log('option data contains', optionsData) ;    
+        //console.log("Option chain data:", response.data);
+        } catch(err) {
+            console.error('Error fetching option chain data', err);
+        }
+
+        
+    }
+
+    /*
+    This function decomposes the option chain response into its usable parts, it uses reduce which does ..., and then sets the option data and prepares it for rendering on the front end
+    */
+    function organizeOptionChainResponse(optionChain) {
+//split here send over response.data.options.
+        const organizedOptions = optionChain.reduce((acc, option) => {
+            //unpack values
+            const {strike, type, bid, ask, delta, iv} = option;
+
+            //not sure
+            if (!acc[strike]) {
+                acc[strike] = {strike, call:{}, put:{}};
+            }
+
+            if(type === 'call') {
+                acc[strike].call = {bid, ask, delta, iv};
+            } else if (type === 'put') {
+                acc[strike].put = {bid, ask, delta, iv};
+            }
+
+            return acc;
+        }, {});
+
+        setOptionsData(Object.values(organizedOptions));
+        //setOptionsData(response.data);  
+        console.log('option data contains', optionsData) ;    
+        //console.log("Option chain data:", response.data);
+    }
+
+    
 
     const handleSearchClick = async (e) => {
         e.preventDefault();
         console.log("Searching");
+        setExpirations([]);
+        setSelectedExpiration("");
         try {
-            let res = await axios.post('http://localhost:5000/input', {tickerSymbol: tickerInput}, {withCredentials: true})
+            const res = await axios.post('http://localhost:5000/input', {tickerSymbol: tickerInput}, {withCredentials: true})
             console.log("myres is: ", res.data);
             if(res.data) { 
                 setTicker(res.data['ticker']);
                 setCompany(res.data['companyName']);
                 setCurrentPrice(res.data['currentPrice']);
+                //const expirationsData = Array(Object.values(res.data['expirations']))
+                setExpirations(Object.values(res.data['expirations']));
+                //console.log(expirations)
+                
                 setBidPrice(res.data['bidPrice']);
                 setAskPrice(res.data['askPrice']);
+
+
             } else {
                 console.log("No Valid ticker received")
             }
         } catch (err) {
             console.error('Error fetching data')
         }
-
+        
         
         //only after we get a response with the ticker should we set
         // the ticker symbol and load the option chain, dont set it as user is tpying
@@ -135,7 +235,7 @@ function MainPage() {
 
     return (
         <div className="outer-container h-screen bg-blue-200 flex justify-center items-center w-full">
-            <div className="bg-black h-5/6 w-5/6 md:w-4/6">
+            <div className="bg-black h-5/6 w-5/6 ">
                 <div className="search-container relative w-full flex justify-center items-center flex-col ">
                     <div className="relative z-10 w-full">
                         <span className="absolute inset-y-0 left-0 bg-green-400 flex items-center text-black z-10 p-2">
@@ -196,6 +296,30 @@ function MainPage() {
                             {askPrice}
                         </h1>
                     </div>
+
+                    <div className="expiration-container">
+                        <select
+                            name="expiration"
+                            id='expiration'
+                            className=''
+                            value={selectedExpiration}
+                            onChange={handleExpirationChange}
+                        >
+                            <option 
+                            value="" 
+                            disabled>
+                                Select Expiration
+                            </option>
+                            {expirations.map((expiration) => (
+                                <option
+                                    key={expiration}
+                                    value={expiration}
+                                >
+                                    {expiration}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
 
                 <div className="strategy-container mt-14 min-h-6 bg-purple-400 flex items-center">
@@ -212,7 +336,12 @@ function MainPage() {
                         value={selectedStrategy}
                         onChange={handleStrategyChange}
                     >
-                        <option value="" disabled>Select a Strategy</option>
+                        <option 
+                            value="" 
+                            disabled>
+                                Select a Strategy
+                        </option>
+
                         {Object.keys(strategies).map(strategy => (
                             <option key={strategy} value={strategy}>{strategy}</option>
                         ))}
@@ -228,6 +357,7 @@ function MainPage() {
                                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Call Ask</th>
                                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Call Delta</th>
                                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Call IV</th>
+                                
                                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider bg-yellow-200">Strike</th>
                                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Put Bid</th>
                                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Put Ask</th>
@@ -236,25 +366,23 @@ function MainPage() {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {contracts.map((contract) => (
-                                <tr key={contract.id}>
-                                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                            {optionsData.map((option) => (
+                                <tr key={option.strike}>
+                                    <td className='px-6 py-4 text-center'>
                                         <input
-                                            type="checkbox"
-                                            checked={selectedContracts.includes(contract.id)}
-                                            onChange={() => handleCheckboxChange(contract.id)}
-                                            disabled={!selectedStrategy}
+                                            type='checkbox'
+                                            onChange={() => handleCheckboxChange(option.strike)}
                                         />
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{contract.callBid}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{contract.callAsk}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{contract.callDelta}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{contract.callIV}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{contract.strike}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{contract.putBid}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{contract.putAsk}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{contract.putDelta}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{contract.putIV}</td>
+                                    <td className="px-6 py-4 text-center">{option.call.bid || '-'}</td>
+                                    <td className="px-6 py-4 text-center">{option.call.ask || '-'}</td>
+                                    <td className="px-6 py-4 text-center">{option.call.delta || '-'}</td>
+                                    <td className="px-6 py-4 text-center">{option.call.iv || '-'}</td>
+                                    <td className="px-6 py-4 text-center bg-yellow-200">{option.strike}</td>
+                                    <td className="px-6 py-4 text-center">{option.put.bid || '-'}</td>
+                                    <td className="px-6 py-4 text-center">{option.put.ask || '-'}</td>
+                                    <td className="px-6 py-4 text-center">{option.put.delta || '-'}</td>
+                                    <td className="px-6 py-4 text-center">{option.put.iv || '-'}</td>                                    
                                 </tr>
                             ))}
                         </tbody>
