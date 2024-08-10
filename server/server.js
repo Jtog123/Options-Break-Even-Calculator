@@ -57,7 +57,7 @@ router.post('/input', async (req, res) => {
         let askPrice = quoteResponse.data.quotes.quote.ask;
 
         let expirations = expirationResponse.data.expirations.date;
-        console.log(expirations)
+        //console.log(expirations)
     
 
         //we have to have user select the stock
@@ -87,30 +87,34 @@ router.post('/input', async (req, res) => {
     }
 })
 
-/*
-router.post('/input', async (req, res) => {
-    //console.log("req body is", req.body)
+router.post('/expirations', async (req, res) => {
+    const {tickerInput} = req.body
+    const {expirationTime} = req.body
+    console.log(req.body)
     
-    const {tickerSymbol} = req.body;
-    try{
-        const response = await axios.get('https://sandbox.tradier.com/v1/markets/options/lookup', {
+    try {
+        const response = await axios.get('https://sandbox.tradier.com/v1/markets/options/chains', {
+            params: {
+                'symbol': tickerInput,
+                'expiration': expirationTime,
+                'greeks': true
+            },
             headers: {
                 'Authorization': `Bearer ${process.env.TRADIER_ACCESS_TOKEN}`,
                 'Accept': 'application/json'
-            },
-            params: {
-                'underlying' : `${tickerSymbol}`
             }
-        });
-
-        console.log(response.data['symbols'][0])
-        console.log(response.data['symbols'][0]['rootSymbol'])
-        res.send(response.data['symbols'][0]['rootSymbol']);
-    } catch(err) {
-        console.log(err);
+        })
+        console.log(response.data)
+        optionsChain = response.data.options.option
+        console.log(optionsChain);
+        // now send options chain back
+        // how do we match the respective option chain to the type of option call/put, and display all this in the right areas
+    } catch (err) {
+        console.error(err)
     }
+
+
 })
-*/
 
 app.use(cors({
     origin: 'http://localhost:3000',
