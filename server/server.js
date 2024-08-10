@@ -93,6 +93,23 @@ router.post('/expirations', async (req, res) => {
     console.log(req.body)
     
     try {
+
+        // Get the underlying price for taking the difference
+
+        const quoteResponse = await axios.get('https://sandbox.tradier.com/v1/markets/quotes', {
+            params: {
+                'symbols': tickerInput
+            },
+            headers: {
+                'Authorization': `Bearer ${process.env.TRADIER_ACCESS_TOKEN}`,
+                'Accept': 'application/json'                
+            }
+        });
+
+        const stockPrice = quoteResponse.data.quotes.quote.last;
+
+
+        // GET option chains
         const response = await axios.get('https://sandbox.tradier.com/v1/markets/options/chains', {
             params: {
                 'symbol': tickerInput,
@@ -104,11 +121,40 @@ router.post('/expirations', async (req, res) => {
                 'Accept': 'application/json'
             }
         })
-        console.log(response.data)
-        optionsChain = response.data.options.option
-        console.log(optionsChain);
-        // now send options chain back
-        // how do we match the respective option chain to the type of option call/put, and display all this in the right areas
+        //console.log(response.data)
+        optionsChain = response.data.options.option;
+
+        const strikeFilteredOptions = optionsChain.filter(option => {
+            const strikePrice = option.strike;
+            return Math.abs(strikePrice - stockPrice) <= 5;
+        });
+
+        //console.log(strikeFilteredOptions[0]);
+
+        const filteredOptions = strikeFilteredOptions.map(option => ({
+            type: option.option_type,
+            strike: option.strike,
+            bid: option.bid,
+            ask: option.ask,
+            delta: option.greeks.delta,
+            iv: option.greeks.mid_iv,
+            expiration: option.expiration_type
+        }));
+
+        //ok have now filitered this
+        console.log(filteredOptions);
+
+        res.json({options: filteredOptions});
+        
+
+
+        
+
+        // we need to determine the options strike price, to determine its row
+        // We need to determine if option is a call or a put
+        // we need to send it expiration back
+        //whether put or call we need to send back its bid, ask, delta, IV (which one?), and its strike
+        // We need to determine if its a standard or a weeklys
     } catch (err) {
         console.error(err)
     }
