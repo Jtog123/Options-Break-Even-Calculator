@@ -51,11 +51,22 @@ function MainPage() {
 
     const strategies = {
         "Buy Call(s)": 1,
-        "Buy Puts(s)": 1,
+        "Buy Put(s)": 1,
+        "Sell Call(s)": 1,
+        "Sell Put(s)": 1,
         "Vertical Spread": 2,
         "Butterfly Spread": 3,
         "Iron Condor": 4,
     };
+
+    /*
+    Selling the call the premium you take in is the bid
+    Bid: 4.65 premium: $465
+    Need to the stock 
+    strike $265 + $4.65 premium = breakeven 
+    anything aboev that i get losses on
+    anything below it i get to keep the premium
+    */
 
 
 
@@ -103,16 +114,23 @@ function MainPage() {
         // iterate through the optionData find the contract whose strike price matches the selected contracts strike price
         selectedContracts.forEach((contractId) => {
             const option = optionsData.find(option => option.strike === contractId);
+            let breakEven;
             if(option && selectedStrategy === 'Buy Call(s)') {
                 console.log('Buying dem calls at strkke ', option);
                 // calculate breakeven use the options ask
                 // users can set custom asks
                 //strike + premium paid , ask is premium
-                let breakEven = contractId + option.call.ask;
-                setBreakevenPrice(breakEven);
+                breakEven = contractId + option.call.ask;
 
-
+            } else if(option && selectedStrategy === 'Buy Put(s)') {
+                breakEven = contractId - option.put.ask;
+            } else if(option && selectedStrategy === 'Sell Call(s)') {
+                breakEven = contractId + option.call.bid; 
+            } else if(option && selectedStrategy === 'Sell Put(s)') {
+                breakEven = contractId - option.put.bid;
             }
+
+            setBreakevenPrice(breakEven)
         })
 
     }
