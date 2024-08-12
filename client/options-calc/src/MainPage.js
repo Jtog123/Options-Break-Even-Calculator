@@ -35,7 +35,7 @@ function MainPage() {
     const [bidPrice, setBidPrice] = useState("-");
     const [askPrice, setAskPrice] = useState("-");
 
-    const [breakevenPrice, setBreakevenPrice] = useState('-');
+    const [breakevenPrice, setBreakevenPrice] = useState(0);
 
     useEffect(() => {
         console.log('optionsData updated:', optionsData);
@@ -44,6 +44,10 @@ function MainPage() {
     useEffect(() => {
         console.log('selected Contract:', selectedContracts);
     }, [selectedContracts]);
+
+    useEffect(() => {
+        console.log('breakeven is:', breakevenPrice);
+    }, [breakevenPrice]);
 
     const strategies = {
         "Buy Call(s)": 1,
@@ -100,8 +104,14 @@ function MainPage() {
         selectedContracts.forEach((contractId) => {
             const option = optionsData.find(option => option.strike === contractId);
             if(option && selectedStrategy === 'Buy Call(s)') {
-                console.log('Buying dem calls at strkke ', option.strike);
-                // calculate breakeven
+                console.log('Buying dem calls at strkke ', option);
+                // calculate breakeven use the options ask
+                // users can set custom asks
+                //strike + premium paid , ask is premium
+                let breakEven = contractId + option.call.ask;
+                setBreakevenPrice(breakEven);
+
+
             }
         })
 
@@ -227,6 +237,7 @@ function MainPage() {
         setOptionsData([]);
         setSelectedExpiration("");
         setSelectedStrategy("");
+        setBreakevenPrice(0);
         try {
             const res = await axios.post('http://localhost:5000/input', {tickerSymbol: tickerInput}, {withCredentials: true})
             console.log("myres is: ", res.data);
@@ -412,13 +423,13 @@ function MainPage() {
                                     </td>
                                     <td className="px-6 py-4 text-center">{option.call.bid || '-'}</td>
                                     <td className="px-6 py-4 text-center">{option.call.ask || '-'}</td>
-                                    <td className="px-6 py-4 text-center">{option.call.delta || '-'}</td>
-                                    <td className="px-6 py-4 text-center">{option.call.iv || '-'}</td>
+                                    <td className="px-6 py-4 text-center">{(option.call.delta).toFixed(2) || '-'}</td>
+                                    <td className="px-6 py-4 text-center">{(option.call.iv).toFixed(2) || '-'}</td>
                                     <td className="px-6 py-4 text-center bg-yellow-200">{option.strike}</td>
                                     <td className="px-6 py-4 text-center">{option.put.bid || '-'}</td>
                                     <td className="px-6 py-4 text-center">{option.put.ask || '-'}</td>
-                                    <td className="px-6 py-4 text-center">{option.put.delta || '-'}</td>
-                                    <td className="px-6 py-4 text-center">{option.put.iv || '-'}</td>                                    
+                                    <td className="px-6 py-4 text-center">{(option.put.delta).toFixed(2) || '-'}</td>
+                                    <td className="px-6 py-4 text-center">{(option.put.iv).toFixed(2) || '-'}</td>                                    
                                 </tr>
                             ))}
                         </tbody>
@@ -432,7 +443,7 @@ function MainPage() {
                 </div>
                 <div className="price-box contracts text-white bg-orange-300 flex items-center">
                     <h1 className='text-xl ml-2 w-1/3  md:w-1/2 '>
-                        $171.61
+                        {` $ ${breakevenPrice} per share`}
                     </h1>
                     <h2 className='num-contracts w-1/5 text-xl mr-8 sm:mr-8 '>
                         Num Contracts
