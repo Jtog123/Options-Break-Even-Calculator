@@ -9,6 +9,11 @@ If ticker doesnt exist note couldnt find ticker
 
 On click, send get request to tradier for the ticker symbol and the option chain
 do i need to use axios to make this request
+
+
+
+disabled if selectedStrategy === ""
+
 */
 
 function MainPage() {
@@ -34,6 +39,10 @@ function MainPage() {
         console.log('optionsData updated:', optionsData);
     }, [optionsData]);
 
+    useEffect(() => {
+        console.log('selected Contract:', selectedContracts);
+    }, [selectedContracts]);
+
     const strategies = {
         "Buy Call(s)": 1,
         "Buy Puts(s)": 1,
@@ -41,47 +50,6 @@ function MainPage() {
         "Butterfly Spread": 3,
         "Iron Condor": 4,
     };
-
-    const contracts = [
-        { id: 1, callBid: "Value 1", callAsk: "Value 2", callDelta: "Value 3", callIV: "Value 4", strike: "Value 5", putBid: "Value 6", putAsk: "Value 7", putDelta: "Value 8", putIV: "Value 9" },
-        { id: 2, callBid: "Value 10", callAsk: "Value 11", callDelta: "Value 12", callIV: "Value 13", strike: "Value 14", putBid: "Value 15", putAsk: "Value 16", putDelta: "Value 17", putIV: "Value 18" },
-        { id: 3, callBid: "Value 19", callAsk: "Value 20", callDelta: "Value 21", callIV: "Value 22", strike: "Value 23", putBid: "24", putAsk: "25", putDelta: "26", putIV: "27" },
-        { id: 4, callBid: "Value 10", callAsk: "Value 11", callDelta: "Value 12", callIV: "Value 13", strike: "Value 14", putBid: "Value 15", putAsk: "Value 16", putDelta: "Value 17", putIV: "Value 18" },
-        // Add more contract data as needed
-    ];
-
-    const handleIncrementClick = () => {
-        
-        setNumContracts((prevNumContracts) => {
-            if(prevNumContracts >= 999) {
-                return 999;
-            }
-            return prevNumContracts + 1;
-        })
-    }
-
-    const handleDecrementClick = () => {
-        setNumContracts((prevNumContracts) => {
-            if(prevNumContracts <= 1) {
-                return 1;
-            }
-            return prevNumContracts - 1;
-        })
-    }
-
-    const handleInputChange = (e) => {
-        let value = parseInt(e.target.value, 10);
-        if(isNaN(value)) {
-            value = 1;
-        } else if(value < 1) {
-            value = 1;
-        } else if (value > 999) {
-            value = 999
-        }
-        setNumContracts(value);
-    }
-
-
 
 
 
@@ -92,9 +60,13 @@ function MainPage() {
 
     const handleCheckboxChange = (contractId) => {
         setSelectedContracts((prevSelectedContracts) => {
+
+            
+        
             const isSelected = prevSelectedContracts.includes(contractId);
 
             const maxSelections = strategies[selectedStrategy];
+            
 
             if(isSelected) {
                 return prevSelectedContracts.filter(id => id !== contractId);
@@ -129,30 +101,8 @@ function MainPage() {
         
         /*
         //split here send over response.data.options.
-        const organizedOptions = response.data.options.reduce((acc, option) => {
-            //unpack values
-            const {strike, type, bid, ask, delta, iv} = option;
-
-            //not sure
-            if (!acc[strike]) {
-                acc[strike] = {strike, call:{}, put:{}};
-            }
-
-            if(type === 'call') {
-                acc[strike].call = {bid, ask, delta, iv};
-            } else if (type === 'put') {
-                acc[strike].put = {bid, ask, delta, iv};
-            }
-
-            return acc;
-        }, {});
-        
-
-        setOptionsData(Object.values(organizedOptions));
         */
-        //setOptionsData(response.data);  
-        //console.log('option data contains', optionsData) ;    
-        //console.log("Option chain data:", response.data);
+
         } catch(err) {
             console.error('Error fetching option chain data', err);
         }
@@ -164,7 +114,7 @@ function MainPage() {
     This function decomposes the option chain response into its usable parts, it uses reduce which does ..., and then sets the option data and prepares it for rendering on the front end
     */
     function organizeOptionChainResponse(optionChain) {
-//split here send over response.data.options.
+
         const organizedOptions = optionChain.reduce((acc, option) => {
             //unpack values
             const {strike, type, bid, ask, delta, iv} = option;
@@ -189,13 +139,68 @@ function MainPage() {
         //console.log("Option chain data:", response.data);
     }
 
+
+    const handleIncrementClick = () => {
+        
+        setNumContracts((prevNumContracts) => {
+            if(prevNumContracts >= 999) {
+                return 999;
+            }
+            return prevNumContracts + 1;
+        })
+    }
+
+    const handleDecrementClick = () => {
+        setNumContracts((prevNumContracts) => {
+            if(prevNumContracts <= 1) {
+                return 1;
+            }
+            return prevNumContracts - 1;
+        })
+    }
+
+    const handleInputChange = (e) => {
+        let value = parseInt(e.target.value, 10);
+        if(isNaN(value)) {
+            value = 1;
+        } else if(value < 1) {
+            value = 1;
+        } else if (value > 999) {
+            value = 999
+        }
+        setNumContracts(value);
+    }
+
+    /*
+    To do:
+    ok so if ticker change option screen should clear
+    also now that we have our respective data from the options chain
+    we can begin to calculate the breakeven prices
+    from at least Buy Calls and Buy Puts
+    Before we can select a checkbox we must select a strategy (selectedStrat)
+    show an alert if the user has not selected strat
+    if selectedStrat != null you can check a box
+
+    if the selected strat is buy calls
+    use call info
+    if its buy puts use put info 
+    How do we now select only the call info 
+    will this work for more complicated strategies?
+    dont know
+    two selects one for select call
+    one for select put?
+
+    have it build a graph as user uses it???? after MVP
+    */
     
 
     const handleSearchClick = async (e) => {
         e.preventDefault();
         console.log("Searching");
         setExpirations([]);
+        setOptionsData([]);
         setSelectedExpiration("");
+        setSelectedStrategy("");
         try {
             const res = await axios.post('http://localhost:5000/input', {tickerSymbol: tickerInput}, {withCredentials: true})
             console.log("myres is: ", res.data);
@@ -298,6 +303,7 @@ function MainPage() {
                     </div>
 
                     <div className="expiration-container">
+                        <h1>Expirations</h1>
                         <select
                             name="expiration"
                             id='expiration'
@@ -335,11 +341,13 @@ function MainPage() {
                         className="w-3/6 text-2xl h-8"
                         value={selectedStrategy}
                         onChange={handleStrategyChange}
+                        required
                     >
                         <option 
                             value="" 
-                            disabled>
-                                Select a Strategy
+                            disabled
+                        >
+                                Stratagies
                         </option>
 
                         {Object.keys(strategies).map(strategy => (
@@ -371,7 +379,9 @@ function MainPage() {
                                     <td className='px-6 py-4 text-center'>
                                         <input
                                             type='checkbox'
+                                            disabled={selectedStrategy === ""}
                                             onChange={() => handleCheckboxChange(option.strike)}
+                                            checked={selectedContracts.includes(option.strike)}
                                         />
                                     </td>
                                     <td className="px-6 py-4 text-center">{option.call.bid || '-'}</td>
