@@ -37,6 +37,8 @@ function MainPage() {
 
     const [breakevenPrice, setBreakevenPrice] = useState(0);
 
+    const [loggedIn, setIsLoggedIn] = useState(false);
+
     useEffect(() => {
         console.log('optionsData updated:', optionsData);
     }, [optionsData]);
@@ -54,6 +56,8 @@ function MainPage() {
         "Buy Put(s)": 1,
         "Sell Call(s)": 1,
         "Sell Put(s)": 1,
+        "Sell Covered Call(s)": 1,
+        "Buy Protective Put(s)": 1,        
         "Vertical Spread": 2,
         "Butterfly Spread": 3,
         "Iron Condor": 4,
@@ -112,6 +116,17 @@ function MainPage() {
 
         //contractId is also the strike price
         // iterate through the optionData find the contract whose strike price matches the selected contracts strike price
+
+        /*
+        ok so issues unresolved:
+            how do we select contracts for more complicated strats?
+            conditionally enable/ disable components based on the strategy
+            if selling note a premium recieved
+            if logged in allow users to: make custom bids and asks, then calc for them
+            Stylize the app
+        */
+
+
         selectedContracts.forEach((contractId) => {
             const option = optionsData.find(option => option.strike === contractId);
             let breakEven;
@@ -142,6 +157,8 @@ function MainPage() {
 
         const newExpiration = e.target.value;
         setSelectedExpiration(newExpiration);
+        setBreakevenPrice(0);
+        
 
         try{
             const response = await axios.post('http://localhost:5000/expirations', {
@@ -454,10 +471,18 @@ function MainPage() {
                     </table>
                 </div>
 
-                <div className='h-10 text-white bg-purple-400 mt-10  '>
+                <div className=' breakeven-and-premium h-10 flex text-white bg-purple-400 mt-10  '>
                     <h1 className='text-3xl ml-2 w-1/3'>
                         Breakeven
                     </h1>
+                    <h1 className='text-3xl ml-2 w-1/3'>
+                        Premium
+                    </h1>
+                </div>
+                <div className="custom-bid-ask">
+                    <input
+                        disabled={loggedIn === true}    
+                    />
                 </div>
                 <div className="price-box contracts text-white bg-orange-300 flex items-center">
                     <h1 className='text-xl ml-2 w-1/3  md:w-1/2 '>
