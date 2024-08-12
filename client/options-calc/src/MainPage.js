@@ -35,6 +35,8 @@ function MainPage() {
     const [bidPrice, setBidPrice] = useState("-");
     const [askPrice, setAskPrice] = useState("-");
 
+    const [breakevenPrice, setBreakevenPrice] = useState('-');
+
     useEffect(() => {
         console.log('optionsData updated:', optionsData);
     }, [optionsData]);
@@ -61,8 +63,6 @@ function MainPage() {
     const handleCheckboxChange = (contractId) => {
         setSelectedContracts((prevSelectedContracts) => {
 
-            
-        
             const isSelected = prevSelectedContracts.includes(contractId);
 
             const maxSelections = strategies[selectedStrategy];
@@ -79,7 +79,33 @@ function MainPage() {
             return prevSelectedContracts;
 
         });
+
+
     };
+
+    //Every time we change the checkbox calculate a new breakeven
+    useEffect(() => {
+        if(selectedContracts.length > 0) {
+            calculateBreakeven();
+        }
+
+    }, [selectedContracts])
+
+    const calculateBreakeven = () => {
+        //console.log('strike is ', strikePrice);
+        //console.log('options data issss', optionsData);
+
+        //contractId is also the strike price
+        // iterate through the optionData find the contract whose strike price matches the selected contracts strike price
+        selectedContracts.forEach((contractId) => {
+            const option = optionsData.find(option => option.strike === contractId);
+            if(option && selectedStrategy === 'Buy Call(s)') {
+                console.log('Buying dem calls at strkke ', option.strike);
+                // calculate breakeven
+            }
+        })
+
+    }
 
     // split these organizeOptionChainResponse(optionChain);
 
