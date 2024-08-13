@@ -3,13 +3,74 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 
+const { Pool } = require('pg');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy
+
+
 const app = express();
 const router = express.Router();
 const PORT = 5000;
 
-const apiKey = process.env.TRADIER_ACCESS_TOKEN;
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}))
+
+const pool = new Pool({
+    user:process.env.POSTGRES_USER,
+    host: 'postgres',
+    database: process.env.POSTGRES_DB,
+    port: 5432
+})
 
 app.use(express.json());
+
+app.use(passport.initialize());
+//app.use(passport.session())
+
+passport.serializeUser((user, done) => {
+    console.log("Seralizing User: ", user);
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+
+})
+
+passport.use(
+    new GoogleStrategy(
+        {
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: 'http://localhost:5000/auth/google/callback'
+            
+        },
+        async (token, tokenSecret, profile, done) => {
+            try {
+                // Try to pull user if it exists
+                let user = await pool.query('SELECT * FROM WHERE google_id = $1', [profile.id]);
+                if(user.rowCount.length === 0) {
+                    // If we get no rows returned insert the user
+                    const result = await pool.query(
+                        'INSERT INTO users (email, google_id, username) VALUES ($1, $2, $3) RETURNING *', [profile.emails[0].value, profile.id, profile.displayName]
+                    );
+                    user = result.rows[0];
+                } else {
+                    user = user.rows[0];
+                }
+                console.log('User in Google Strategy:', user); // Add this line for debugging
+                return done(null, user);
+
+            } catch(err) {
+                console.error('Error in Google Strategy:', err); // Add this line for debugging
+                return done(err, null);
+
+            }
+        }
+       
+    )
+)
 
 router.post('/input', async (req, res) => {
     const {tickerSymbol} = req.body;
@@ -162,10 +223,7 @@ router.post('/expirations', async (req, res) => {
 
 })
 
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
-}))
+
 
 app.use('/', router);
 

@@ -506,7 +506,7 @@ function MainPage() {
                     
                 </div>
 
-                <div className="premium-box flex bg-green-400 items-center mt-2">
+                <div className="premium-box flex bg-blue-400 items-center mt-2">
                     <h1 className='text-white text-3xl w-1/2 ml-2 md:w-3/5'>Premium</h1>
                     <h2 className='text-white text-xl'>Num Contracts</h2>
                     
