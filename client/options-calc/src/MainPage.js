@@ -342,7 +342,7 @@ function MainPage() {
                     </div>
                 </div>
 
-                <div className="stock-info mt-4 text-black w-full bg-blue-300 min-h-14 flex space-x-10">
+                <div className="stock-info mt-4 text-black w-full bg-blue-300 min-h-14 flex space-x-4 md:space-x-10">
                     <div className="ticker-stock-info bg-red-300">
                         <h1 className="text-2xl ml-2">
                             {ticker}
@@ -493,12 +493,12 @@ function MainPage() {
 
                 </div>
 
-                <div className="price-box contracts text-white bg-orange-300 flex items-center ml-2 w-full  ">
-                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 '>
+                <div className="price-box contracts text-white bg-orange-300 flex items-center  w-full  ">
+                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-2 '>
                         {` $ ${breakevenPrice} per share`}
                     </h1>
                     <div className="button-box bg-green-300 w-1/2 md:w-2/5 flex items-center justify-center md:justify-start">
-                        <button className='bg-gray-400 rounded-full text-xl w-24 md:w-1/2 h-8 '> Google</button>
+                        <button className='bg-gray-400 rounded-full text-xl w-24 md:w-1/2 h-8 ml-2 '> Google</button>
                     </div>
 
                     
@@ -513,7 +513,7 @@ function MainPage() {
                 </div>
                 <div className="num-contracts-box flex  bg-gray-400">
                     <h2 className='w-1/2 ml-2 text-2xl md:w-3/5'>{` $ ${300} per share`}</h2>
-                    <div className="number-box flex  ">
+                    <div className="number-box flex">
                             <button 
                                 className='text-xl bg-gray-300 w-8 h-8 text-center'
                                 onClick={handleDecrementClick}
