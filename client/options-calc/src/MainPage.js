@@ -37,7 +37,7 @@ function MainPage() {
 
     const [breakevenPrice, setBreakevenPrice] = useState(0);
 
-    const [loggedIn, setIsLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
 
     useEffect(() => {
         console.log('optionsData updated:', optionsData);
@@ -312,7 +312,7 @@ function MainPage() {
 
     return (
         <div className="outer-container h-screen bg-blue-200 flex justify-center items-center w-full">
-            <div className="bg-black h-5/6 w-5/6 ">
+            <div className="bg-black h-screen w-5/6 ">
                 <div className="search-container relative w-full flex justify-center items-center flex-col ">
                     <div className="relative z-10 w-full">
                         <span className="absolute inset-y-0 left-0 bg-green-400 flex items-center text-black z-10 p-2">
@@ -419,7 +419,7 @@ function MainPage() {
                             value="" 
                             disabled
                         >
-                                Stratagies
+                                Strategies
                         </option>
 
                         {Object.keys(strategies).map(strategy => (
@@ -471,47 +471,68 @@ function MainPage() {
                     </table>
                 </div>
 
-                <div className=' breakeven-and-premium h-10 flex text-white bg-purple-400 mt-10  '>
-                    <h1 className='text-3xl ml-2 w-1/3'>
+                <div className=' breakeven-and-premium h-10 flex text-white bg-purple-400 mt-10 w-full items-center jus '>
+                    <h1 className='text-3xl ml-2 w-1/2 md:w-3/5 bg-yellow-300 '>
                         Breakeven
                     </h1>
-                    <h1 className='text-3xl ml-2 w-1/3'>
-                        Premium
-                    </h1>
+                    <div className="custom-bid-ask flex mr-2 ">
+                        <span className='mr-2'>Bid</span>
+                        <input
+                            className='ask bg-blue-500 w-16 h-6 mr-2'
+                            disabled={loggedIn === true}
+                              
+                        />
+                        <span className='mr-2'>Ask</span>
+                        <input
+                            className='ask bg-orange-500 w-16 h-6'
+                            disabled={loggedIn === true}    
+                        />
+                    </div>
+
+                    
+
                 </div>
-                <div className="custom-bid-ask">
-                    <input
-                        disabled={loggedIn === true}    
-                    />
-                </div>
-                <div className="price-box contracts text-white bg-orange-300 flex items-center">
-                    <h1 className='text-xl ml-2 w-1/3  md:w-1/2 '>
+
+                <div className="price-box contracts text-white bg-orange-300 flex items-center ml-2 w-full  ">
+                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 '>
                         {` $ ${breakevenPrice} per share`}
                     </h1>
-                    <h2 className='num-contracts w-1/5 text-xl mr-8 sm:mr-8 '>
-                        Num Contracts
-                    </h2>
-                    <div className="number-box flex w-1/3 ">
-                        <button 
-                            className='text-xl bg-gray-300 w-8 h-8 text-center'
-                            onClick={handleDecrementClick}
-                        >
-                            -
-                        </button>
-                        <input 
-                            className='bg-white text-black text-xl w-12 text-center'
-                            value={numContracts}
-                            type='text'
-                            onChange={handleInputChange}
-                        />
-                        <button 
-                            className='text-xl bg-gray-300 w-8 h-8 text-center'
-                            onClick={handleIncrementClick}
-                        >
-                                +
-                        </button>
+                    <div className="button-box bg-green-300 w-1/2 md:w-2/5 flex items-center justify-center md:justify-start">
+                        <button className='bg-gray-400 rounded-full text-xl w-24 md:w-1/2 h-8 '> Google</button>
                     </div>
+
                     
+
+                    
+                </div>
+
+                <div className="premium-box flex bg-green-400 items-center mt-2">
+                    <h1 className='text-white text-3xl w-1/2 ml-2 md:w-3/5'>Premium</h1>
+                    <h2 className='text-white text-xl'>Num Contracts</h2>
+                    
+                </div>
+                <div className="num-contracts-box flex  bg-gray-400">
+                    <h2 className='w-1/2 ml-2 text-2xl md:w-3/5'>{` $ ${300} per share`}</h2>
+                    <div className="number-box flex  ">
+                            <button 
+                                className='text-xl bg-gray-300 w-8 h-8 text-center'
+                                onClick={handleDecrementClick}
+                            >
+                                -
+                            </button>
+                            <input 
+                                className='bg-white text-black text-xl w-12 text-center'
+                                value={numContracts}
+                                type='text'
+                                onChange={handleInputChange}
+                            />
+                            <button 
+                                className='text-xl bg-gray-300 w-8 h-8 text-center'
+                                onClick={handleIncrementClick}
+                            >
+                                    +
+                            </button>
+                        </div>
                 </div>
 
             </div>
