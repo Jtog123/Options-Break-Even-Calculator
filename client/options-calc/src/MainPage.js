@@ -37,7 +37,7 @@ function MainPage() {
 
     const [breakevenPrice, setBreakevenPrice] = useState(0);
     const [customBid, setCustomBid] = useState(0);
-    const [inputValue, setInputValue] = useState('');
+    const [AskInputValue, setInputValue] = useState('');
     const [customAsk, setCustomAsk] = useState(0);
 
     const [loggedIn, setLoggedIn] = useState(false);
@@ -76,21 +76,21 @@ function MainPage() {
         window.location.href = 'http://localhost:5000/auth/google';    
     }
 
-    const handleCustomBid = (e) => {
+    const handleCustomAsk = (e) => {
         const value = e.target.value;
 
         if(/^\d*\.?\d*$/.test(value)) {
             setInputValue(value);
             
-            const customBidValue = parseFloat(value);
+            const customAskValue = parseFloat(value);
 
-            if(!isNaN(customBidValue)) {
-                setCustomBid(customBidValue);
+            if(!isNaN(customAskValue)) {
+                setCustomAsk(customAskValue);
 
                 if(optionsData.length > 0) {
                     const selectedOption = optionsData.find(option => option.strike === selectedContracts[0]);
                     if (selectedOption) {
-                        const breakEven = selectedOption.strike + customBidValue;
+                        const breakEven = selectedOption.strike + customAskValue;
                         setBreakevenPrice(breakEven);
                     }
                 }
@@ -100,12 +100,12 @@ function MainPage() {
 
     }
 
-    const handleCustomAsk = (e) => {
+    const handleCustomBid = (e) => {
         let value = parseInt(e.target.value, 10);
         if(isNaN(value) || value < 1) {
-            setCustomAsk(0);
+            setCustomBid(0);
         } else {
-            setCustomAsk(value)
+            setCustomBid(value)
         }
 
         //optionsData stores the data i need to manipulate
@@ -554,8 +554,8 @@ function MainPage() {
                         <input
                             className='ask bg-blue-500 w-16 h-6 mr-2'
                             disabled={loggedIn === false}
-                            onChange={handleCustomBid}
-                            value={inputValue}
+                            onChange={null}
+                            value={null}
                             
                               
                         />
@@ -564,7 +564,7 @@ function MainPage() {
                             className='ask bg-orange-500 w-16 h-6'
                             disabled={loggedIn === false}
                             onChange={handleCustomAsk}
-                            value={customAsk}    
+                            value={AskInputValue}    
                         />
                     </div>
 
