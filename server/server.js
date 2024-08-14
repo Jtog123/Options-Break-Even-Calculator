@@ -18,16 +18,25 @@ app.use(cors({
 }))
 
 const pool = new Pool({
-    user:process.env.POSTGRES_USER,
-    host: 'postgres',
+    user: process.env.POSTGRES_USER,
+    host: 'db', // Adjust this if using Docker or other setup
     database: process.env.POSTGRES_DB,
+    password: process.env.POSTGRES_PASSWORD, // Make sure to include the password
     port: 5432
-})
+});
+
 
 app.use(express.json());
 
+app.use(session({
+    secret: 'your-session-secret', // Replace with a strong secret
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
+
 app.use(passport.initialize());
-//app.use(passport.session())
+app.use(passport.session())
 
 passport.serializeUser((user, done) => {
     console.log("Seralizing User: ", user);
@@ -35,8 +44,16 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id, done) => {
-
-})
+    console.log('Deserializing user with id:', id); // Add this line
+    try {
+        const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+        console.log('User found:', result.rows[0]); // Add this line
+        done(null, result.rows[0]);
+    } catch (err) {
+        console.error('Error deserializing user:', err); // Add this line
+        done(err, null);
+    }
+});
 
 passport.use(
     new GoogleStrategy(
@@ -70,7 +87,20 @@ passport.use(
         }
        
     )
-)
+);
+
+router.get('/auth/google', passport.authenticate('google', {scope: ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email']}))
+
+router.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/auth/failure'}), (req, res) => {
+        // Successful authentication, redirect to your desired route
+        //res.redirect('/protected')
+        //res.redirect('/conversation')
+        res.redirect('http://localhost:3000'); // Redirect to the client-side route
+})
+
+router.get('/auth/failure', (req, res) => {
+    res.send("Failed to authenticate, some went wrong")
+})
 
 router.post('/input', async (req, res) => {
     const {tickerSymbol} = req.body;

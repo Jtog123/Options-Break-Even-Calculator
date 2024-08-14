@@ -51,6 +51,10 @@ function MainPage() {
         console.log('breakeven is:', breakevenPrice);
     }, [breakevenPrice]);
 
+    const handleBackendRedirect = () => {
+        window.location.href = 'http://localhost:5000/auth/google'
+      }
+
     const strategies = {
         "Buy Call(s)": 1,
         "Buy Put(s)": 1,
@@ -498,7 +502,8 @@ function MainPage() {
                         {` $ ${breakevenPrice} per share`}
                     </h1>
                     <div className="button-box bg-green-300 w-1/2 md:w-2/5 flex items-center justify-center md:justify-start">
-                        <button className='bg-gray-400 rounded-full text-xl w-24 md:w-1/2 h-8 ml-2 '> Google</button>
+                        <button className='bg-gray-400 rounded-full text-xl w-24 md:w-1/2 h-8 ml-2 '
+                        onClick={handleBackendRedirect}> Google</button>
                     </div>
 
                     
