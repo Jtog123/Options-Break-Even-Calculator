@@ -37,6 +37,7 @@ function MainPage() {
 
     const [breakevenPrice, setBreakevenPrice] = useState(0);
     const [customBid, setCustomBid] = useState(0);
+    const [inputValue, setInputValue] = useState('');
     const [customAsk, setCustomAsk] = useState(0);
 
     const [loggedIn, setLoggedIn] = useState(false);
@@ -76,13 +77,26 @@ function MainPage() {
     }
 
     const handleCustomBid = (e) => {
-        let value = parseInt(e.target.value, 10);
-        if(isNaN(value) || value < 1) {
-            setCustomBid(0);
-        } else {
-            setCustomBid(value);
+        const value = e.target.value;
+
+        if(/^\d*\.?\d*$/.test(value)) {
+            setInputValue(value);
+            
+            const customBidValue = parseFloat(value);
+
+            if(!isNaN(customBidValue)) {
+                setCustomBid(customBidValue);
+
+                if(optionsData.length > 0) {
+                    const selectedOption = optionsData.find(option => option.strike === selectedContracts[0]);
+                    if (selectedOption) {
+                        const breakEven = selectedOption.strike + customBidValue;
+                        setBreakevenPrice(breakEven);
+                    }
+                }
+            }
+
         }
-        
 
     }
 
@@ -93,6 +107,8 @@ function MainPage() {
         } else {
             setCustomAsk(value)
         }
+
+        //optionsData stores the data i need to manipulate
 
     }
 
@@ -225,7 +241,8 @@ function MainPage() {
             },
             {withCredentials:true} 
         );
-        organizeOptionChainResponse( response.data.options)
+        organizeOptionChainResponse(response.data.options);
+
         
         /*
         //split here send over response.data.options.
@@ -263,7 +280,7 @@ function MainPage() {
 
         setOptionsData(Object.values(organizedOptions));
         //setOptionsData(response.data);  
-        console.log('option data contains', optionsData) ;    
+        console.log('option data contains', optionsData);    
         //console.log("Option chain data:", response.data);
     }
 
@@ -538,7 +555,7 @@ function MainPage() {
                             className='ask bg-blue-500 w-16 h-6 mr-2'
                             disabled={loggedIn === false}
                             onChange={handleCustomBid}
-                            value={customBid}
+                            value={inputValue}
                             
                               
                         />
