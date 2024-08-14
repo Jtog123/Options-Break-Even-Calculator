@@ -49,7 +49,7 @@ passport.use(
         async (token, tokenSecret, profile, done) => {
             try {
                 // Try to pull user if it exists
-                let user = await pool.query('SELECT * FROM WHERE google_id = $1', [profile.id]);
+                let user = await pool.query('SELECT * FROM users WHERE google_id = $1', [profile.id]);
                 if(user.rowCount.length === 0) {
                     // If we get no rows returned insert the user
                     const result = await pool.query(
