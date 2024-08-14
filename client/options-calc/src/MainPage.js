@@ -36,6 +36,8 @@ function MainPage() {
     const [askPrice, setAskPrice] = useState("-");
 
     const [breakevenPrice, setBreakevenPrice] = useState(0);
+    const [customBid, setCustomBid] = useState(0);
+    const [customAsk, setCustomAsk] = useState(0);
 
     const [loggedIn, setLoggedIn] = useState(false);
 
@@ -51,9 +53,60 @@ function MainPage() {
         console.log('breakeven is:', breakevenPrice);
     }, [breakevenPrice]);
 
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/auth/status', {withCredentials: true})
+                if(response.data.loggedIn) {
+                    setLoggedIn(true);
+                } else {
+                    setLoggedIn(false);
+                }
+            } catch(err) {
+                console.error('Error checking login status: ', err);
+                setLoggedIn(false);
+            }
+
+        }
+        checkLoginStatus();
+    }, [setLoggedIn])
+
     const handleBackendRedirect = () => {
-        window.location.href = 'http://localhost:5000/auth/google'
-      }
+        window.location.href = 'http://localhost:5000/auth/google';    
+    }
+
+    const handleCustomBid = (e) => {
+        let value = parseInt(e.target.value, 10);
+        if(isNaN(value) || value < 1) {
+            setCustomBid(0);
+        } else {
+            setCustomBid(value);
+        }
+        
+
+    }
+
+    const handleCustomAsk = (e) => {
+        let value = parseInt(e.target.value, 10);
+        if(isNaN(value) || value < 1) {
+            setCustomAsk(0);
+        } else {
+            setCustomAsk(value)
+        }
+
+    }
+
+    /*
+            let value = parseInt(e.target.value, 10);
+        if(isNaN(value)) {
+            value = 1;
+        } else if(value < 1) {
+            value = 1;
+        } else if (value > 999) {
+            value = 999
+        }
+        setNumContracts(value);
+    */
 
     const strategies = {
         "Buy Call(s)": 1,
@@ -483,13 +536,18 @@ function MainPage() {
                         <span className='mr-2'>Bid</span>
                         <input
                             className='ask bg-blue-500 w-16 h-6 mr-2'
-                            disabled={loggedIn === true}
+                            disabled={loggedIn === false}
+                            onChange={handleCustomBid}
+                            value={customBid}
+                            
                               
                         />
                         <span className='mr-2'>Ask</span>
                         <input
                             className='ask bg-orange-500 w-16 h-6'
-                            disabled={loggedIn === true}    
+                            disabled={loggedIn === false}
+                            onChange={handleCustomAsk}
+                            value={customAsk}    
                         />
                     </div>
 

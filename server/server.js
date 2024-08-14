@@ -178,6 +178,14 @@ router.post('/input', async (req, res) => {
     }
 })
 
+router.get('/auth/status', (req, res) => {
+    if(req.isAuthenticated()) {
+        res.json({loggedIn: true});
+    } else {
+        res.json({loggedIn: false});
+    }
+});
+
 router.post('/expirations', async (req, res) => {
     const {tickerInput} = req.body
     const {expirationTime} = req.body
