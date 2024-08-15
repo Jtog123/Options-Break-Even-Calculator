@@ -41,6 +41,9 @@ function MainPage() {
     const [bidInputValue, setBidInputValue] = useState('');
     const [customBid, setCustomBid] = useState(0);
 
+    const[isSelling, setIsSelling] = useState(false);
+    const[isBuying, setIsBuying] = useState(false);
+
 
     const [AskInputValue, setAskInputValue] = useState('');
     const [customAsk, setCustomAsk] = useState(0);
@@ -58,6 +61,12 @@ function MainPage() {
     useEffect(() => {
         console.log('breakeven is:', breakevenPrice);
     }, [breakevenPrice]);
+
+    useEffect(() => {
+        console.log('loggedIn:', loggedIn);
+        console.log('isSelling:', isSelling);
+        console.log('isBuying:', isBuying);
+      }, [loggedIn, isSelling, isBuying]);
 
     useEffect(() => {
         const checkLoginStatus = async () => {
@@ -175,17 +184,28 @@ function MainPage() {
             const isSelected = prevSelectedContracts.includes(contractId);
 
             const maxSelections = strategies[selectedStrategy];
+
+            let updatedContracts;
             
 
             if(isSelected) {
-                return prevSelectedContracts.filter(id => id !== contractId);
+                updatedContracts =  prevSelectedContracts.filter(id => id !== contractId);
+            } else if(prevSelectedContracts.length < maxSelections) {
+                updatedContracts = [...prevSelectedContracts, contractId]
+            } else {
+                updatedContracts = prevSelectedContracts;
             }
 
-            if(prevSelectedContracts.length < maxSelections) {
-                return [...prevSelectedContracts, contractId]
+            if(updatedContracts.length === 0) {
+                setBreakevenPrice(0);
+                setPremium(0);
+                setIsSelling(false);
+                setIsBuying(false);
+                setBidInputValue('');
+                setAskInputValue('');
             }
 
-            return prevSelectedContracts;
+            return updatedContracts;
 
         });
 
@@ -223,6 +243,8 @@ function MainPage() {
         */
 
 
+        let selling = false;
+        let buying = false;
         selectedContracts.forEach((contractId) => {
             const option = optionsData.find(option => option.strike === contractId);
             let breakEven;
@@ -232,19 +254,30 @@ function MainPage() {
                 // users can set custom asks
                 //strike + premium paid , ask is premium
                 breakEven = contractId + option.call.ask;
+                buying = true;
+                selling = false;
 
             } else if(option && selectedStrategy === 'Buy Put(s)') {
                 breakEven = contractId - option.put.ask;
+                buying = true;
+                selling = false;
             } else if(option && selectedStrategy === 'Sell Call(s)') {
-                setPremium(option.call.bid)
+                setPremium(option.call.bid);
+                selling = true;
+                buying = false;
                 breakEven = contractId + option.call.bid; 
             } else if(option && selectedStrategy === 'Sell Put(s)') {
-                setPremium(option.put.bid)
+                setPremium(option.put.bid);
+                selling = true;
+                buying = false;
                 breakEven = contractId - option.put.bid;
             }
 
             setBreakevenPrice(breakEven)
-        })
+        });
+        setIsSelling(selling);
+        setIsBuying(buying);
+        
 
     }
 
@@ -578,7 +611,7 @@ function MainPage() {
                         <span className='mr-2'>Bid</span>
                         <input
                             className='ask bg-blue-500 w-16 h-6 mr-2'
-                            disabled={loggedIn === false}
+                            disabled={!(loggedIn && isSelling)}
                             onChange={handleCustomBid}
                             value={bidInputValue}
                             
@@ -587,7 +620,7 @@ function MainPage() {
                         <span className='mr-2'>Ask</span>
                         <input
                             className='ask bg-orange-500 w-16 h-6'
-                            disabled={loggedIn === false}
+                            disabled={!(loggedIn && isBuying)}
                             onChange={handleCustomAsk}
                             value={AskInputValue}    
                         />
