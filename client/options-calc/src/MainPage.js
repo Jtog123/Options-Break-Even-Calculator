@@ -26,6 +26,7 @@ function MainPage() {
     const [numContracts, setNumContracts] = useState(1);
 
     const[optionsData, setOptionsData] = useState([]);
+    const[premium, setPremium] = useState(0);
     
 
     const [tickerInput, setTickerInput] = useState("");
@@ -36,8 +37,12 @@ function MainPage() {
     const [askPrice, setAskPrice] = useState("-");
 
     const [breakevenPrice, setBreakevenPrice] = useState(0);
+
+    const [bidInputValue, setBidInputValue] = useState('');
     const [customBid, setCustomBid] = useState(0);
-    const [AskInputValue, setInputValue] = useState('');
+
+
+    const [AskInputValue, setAskInputValue] = useState('');
     const [customAsk, setCustomAsk] = useState(0);
 
     const [loggedIn, setLoggedIn] = useState(false);
@@ -80,7 +85,7 @@ function MainPage() {
         const value = e.target.value;
 
         if(/^\d*\.?\d*$/.test(value)) {
-            setInputValue(value);
+            setAskInputValue(value);
             
             const customAskValue = parseFloat(value);
 
@@ -100,17 +105,29 @@ function MainPage() {
 
     }
 
+    //breakeven = premium paid  + strike
     const handleCustomBid = (e) => {
-        let value = parseInt(e.target.value, 10);
-        if(isNaN(value) || value < 1) {
-            setCustomBid(0);
-        } else {
-            setCustomBid(value)
+        const value = e.target.value;
+
+        if(/^\d*\.?\d*$/.test(value)) {
+            setBidInputValue(value);
+
+            const customBidValue = parseFloat(value);
+
+            if(optionsData.length > 0) { 
+                const selectedOption = optionsData.find(option => option.strike === selectedContracts[0]);
+                if(selectedOption) {
+                    const breakEven = selectedOption.strike + customBidValue;
+                    setBreakevenPrice(breakEven);
+                    setPremium(customBidValue);
+                }
+
+            }
+
         }
-
-        //optionsData stores the data i need to manipulate
-
     }
+
+
 
     /*
             let value = parseInt(e.target.value, 10);
@@ -175,6 +192,10 @@ function MainPage() {
 
     };
 
+    /*
+    when nothing checkmarked breakeven and premium should go to zero
+    */
+
     //Every time we change the checkbox calculate a new breakeven
     useEffect(() => {
         if(selectedContracts.length > 0) {
@@ -182,6 +203,8 @@ function MainPage() {
         }
 
     }, [selectedContracts])
+
+    
 
     const calculateBreakeven = () => {
         //console.log('strike is ', strikePrice);
@@ -213,8 +236,10 @@ function MainPage() {
             } else if(option && selectedStrategy === 'Buy Put(s)') {
                 breakEven = contractId - option.put.ask;
             } else if(option && selectedStrategy === 'Sell Call(s)') {
+                setPremium(option.call.bid)
                 breakEven = contractId + option.call.bid; 
             } else if(option && selectedStrategy === 'Sell Put(s)') {
+                setPremium(option.put.bid)
                 breakEven = contractId - option.put.bid;
             }
 
@@ -554,8 +579,8 @@ function MainPage() {
                         <input
                             className='ask bg-blue-500 w-16 h-6 mr-2'
                             disabled={loggedIn === false}
-                            onChange={null}
-                            value={null}
+                            onChange={handleCustomBid}
+                            value={bidInputValue}
                             
                               
                         />
@@ -592,7 +617,7 @@ function MainPage() {
                     
                 </div>
                 <div className="num-contracts-box flex  bg-gray-400">
-                    <h2 className='w-1/2 ml-2 text-2xl md:w-3/5'>{` $ ${300} per share`}</h2>
+                    <h2 className='w-1/2 ml-2 text-2xl md:w-3/5'>{` $ ${premium * numContracts} per contract(s)`}</h2>
                     <div className="number-box flex">
                             <button 
                                 className='text-xl bg-gray-300 w-8 h-8 text-center'
