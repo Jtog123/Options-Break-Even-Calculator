@@ -2,7 +2,7 @@ import React from 'react';
 
 const GoogleSignInButton = ({ handleBackendRedirect }) => {
     return (
-        <button className="gsi-material-button md:ml-4" onClick={handleBackendRedirect}>
+        <button className="gsi-material-button md:ml-8 mr-4" onClick={handleBackendRedirect}>
             <div className="gsi-material-button-state"></div>
             <div className="gsi-material-button-content-wrapper">
                 <div className="gsi-material-button-icon">

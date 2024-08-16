@@ -32,7 +32,7 @@ function MainPage() {
 
     const [tickerInput, setTickerInput] = useState("");
     const [ticker, setTicker] = useState("");
-    const [company, setCompany] = useState("TICKER");
+    const [company, setCompany] = useState("");
     const [currentPrice, setCurrentPrice] = useState("-");
     const [bidPrice, setBidPrice] = useState("-");
     const [askPrice, setAskPrice] = useState("-");
@@ -396,6 +396,11 @@ function MainPage() {
 
     have it build a graph as user uses it???? after MVP
     */
+    const truncateToTwoWords = (text) => {
+        const words = text.split(' ');
+        return words.slice(0, 2).join(' ');
+    };
+    
     
 
     const handleSearchClick = async (e) => {
@@ -444,10 +449,10 @@ function MainPage() {
     };
 
     return (
-        <div className="outer-container h-screen bg-blue-200 flex justify-center items-center w-full">
-            <div className="bg-darkBlue h-screen w-5/6 ">
-                <div className="search-container relative w-full flex justify-center items-center flex-col ">
-                    <div className="relative z-10 w-full">
+        <div className="outer-container min-h-screen bg-blue-200 flex justify-center items-center w-full">
+            <div className="bg-darkBlue  w-5/6 ">
+                <div className="search-container  relative w-full flex justify-center items-center flex-col ">
+                    <div className="relative z-10 w-full ">
                         <span className="absolute inset-y-0 left-0 bg-tealBlue flex items-center text-black z-10 p-2">
                             symbol
                         </span>
@@ -475,14 +480,14 @@ function MainPage() {
                     </div>
                 </div>
 
-                <div className="stock-info mt-4 text-white w-full  min-h-14 flex space-x-4 md:space-x-10">
+                <div className="stock-info mt-4 text-white w-full md:ml-4  min-h-14 flex space-x-4 md:space-x-10">
                     <div className="ticker-stock-info ">
-                        <h1 className="text-2xl ml-2">
-                            {ticker}
+                        
+                            {ticker === '' ? <h1 className='text-md ml-2'>Ticker </h1> : <h1 className='text-2xl ml-2'>{ticker}</h1>}
+                        <div className="ml-2 text-xs">
+                            {truncateToTwoWords(company)}
                             
-                        </h1>
-                        <div className="text-xs ml-2">
-                            {company}
+                            
                         </div>
                     </div>
                     <div className="stock-price-info ">
@@ -491,7 +496,7 @@ function MainPage() {
                             {currentPrice}
                         </h1>
                     </div>
-                    <div className="bid-ask-info  flex justify-center flex-col">
+                    <div className="bid-ask-info  flex justify-center flex-col ">
                         <h1 className="bid  text-md">
                             Bid
                         </h1>
@@ -509,7 +514,7 @@ function MainPage() {
                     </div>
 
                     <div className="expiration-container">
-                        <h1>Expirations</h1>
+                        <h1 className='mb-1'>Expirations</h1>
                         <select
                             name="expiration"
                             id='expiration'
@@ -536,7 +541,7 @@ function MainPage() {
 
                 <div className="strategy-container mt-8 min-h-6  flex items-center">
                     <div className="text-box w-4/6 ">
-                        <h1 className=" ml-2  text-4xl text-white">
+                        <h1 className=" ml-4  text-4xl text-white">
                             Select Strategy
                         </h1>
                     </div>
@@ -544,7 +549,7 @@ function MainPage() {
                     <select
                         name="strategy"
                         id="strategy"
-                        className="w-3/6 text-2xl h-8 rounded-md"
+                        className="w-3/6 text-2xl h-8 rounded-md mr-4"
                         value={selectedStrategy}
                         onChange={handleStrategyChange}
                         required
@@ -594,7 +599,7 @@ function MainPage() {
                                     <td className="px-6 py-4 text-center">{option.call.ask || '-'}</td>
                                     <td className="px-6 py-4 text-center">{(option.call.delta).toFixed(2) || '-'}</td>
                                     <td className="px-6 py-4 text-center">{(option.call.iv).toFixed(2) || '-'}</td>
-                                    <td className="px-6 py-4 text-center bg-yellow-400">{option.strike}</td>
+                                    <td className="px-6 py-4 text-center bg-yellow-200">{option.strike}</td>
                                     <td className="px-6 py-4 text-center">{option.put.bid || '-'}</td>
                                     <td className="px-6 py-4 text-center">{option.put.ask || '-'}</td>
                                     <td className="px-6 py-4 text-center">{(option.put.delta).toFixed(2) || '-'}</td>
@@ -605,8 +610,8 @@ function MainPage() {
                     </table>
                 </div>
 
-                <div className=' breakeven-and-premium h-10 flex text-white mt-10 w-full items-center jus '>
-                    <h1 className='text-3xl ml-2 w-1/2 md:w-3/5  '>
+                <div className=' breakeven-and-premium h-10 flex text-gray-300 mt-10 w-full items-center jus '>
+                    <h1 className='text-3xl ml-4 w-1/2 md:w-3/5  '>
                         Breakeven
                     </h1>
                     <div className="custom-bid-ask flex mr-2 ">
@@ -621,7 +626,7 @@ function MainPage() {
                         />
                         <span className='mr-2'>Ask</span>
                         <input
-                            className='ask bg-gray-600 w-16 h-6'
+                            className='ask bg-gray-600 w-16 h-6 mr-4'
                             disabled={!(loggedIn && isBuying)}
                             onChange={handleCustomAsk}
                             value={AskInputValue}    
@@ -633,7 +638,7 @@ function MainPage() {
                 </div>
 
                 <div className="price-box contracts text-gray-300  flex items-center  w-full  ">
-                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-2 '>
+                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-4 '>
                         {` $ ${breakevenPrice} per share`}
                     </h1>
                     <div className="button-box  w-1/2 md:w-2/5 flex items-center justify-center md:justify-start">
@@ -650,32 +655,32 @@ function MainPage() {
                 </div>
 
                 <div className="premium-box flex items-center mt-2">
-                    <h1 className='text-gray-300 text-3xl w-1/2 ml-2 md:w-3/5'>Premium</h1>
-                    <h2 className='text-white text-xl ml-6'>Num Contracts</h2>
+                    <h1 className='text-gray-300 text-3xl w-1/2  md:w-3/5 ml-4'>Premium</h1>
+                    <h2 className='text-white text-xl ml-8'>Num Contracts</h2>
                     
                 </div>
-                <div className="num-contracts-box flex ml ">
-                    <h2 className='w-1/2 ml-2 text-2xl text-white md:w-3/5'>{` $ ${premium * numContracts} per contract(s)`}</h2>
-                    <div className="number-box flex ml-6 md:ml-8">
+                <div className="num-contracts-box flex mb-4  ">
+                    <h2 className='w-1/2 text-2xl text-white md:w-3/5 ml-4 mr-4' >{` $ ${premium * numContracts} per contract(s)`}</h2>
+                    <div className="number-box flex ml-5 md:ml-8">
                             <button 
-                                className='text-xl bg-gray-300 w-8 h-8 text-center mr-1 rounded-md'
+                                className='text-xl bg-gray-300 w-8 h-8 text-center rounded-md'
                                 onClick={handleDecrementClick}
                             >
                                 -
                             </button>
                             <input 
-                                className='bg-white text-black text-xl w-12 text-center rounded-md'
+                                className='bg-white text-black text-xl w-12 ml-1 mr-1  text-center rounded-md'
                                 value={numContracts}
                                 type='text'
                                 onChange={handleInputChange}
                             />
                             <button 
-                                className='text-xl bg-gray-300 w-8 h-8 text-center ml-1 rounded-md'
+                                className='text-xl bg-gray-300 w-8 h-8 text-center  rounded-md'
                                 onClick={handleIncrementClick}
                             >
                                     +
                             </button>
-                        </div>
+                    </div>
                 </div>
 
             </div>
