@@ -22,6 +22,13 @@ module.exports = {
         '4/6': '66.666667%',
         '5/6': '83.333333%',
       },
+      colors: {
+        skyBlue: '#00A6FB',
+        deepSkyBlue: '#0582CA',
+        tealBlue: '#006494',
+        navyBlue: '#003554',
+        darkBlue: '#051923',
+      },
     },
   },
   plugins: [],

@@ -444,10 +444,10 @@ function MainPage() {
 
     return (
         <div className="outer-container h-screen bg-blue-200 flex justify-center items-center w-full">
-            <div className="bg-black h-screen w-5/6 ">
+            <div className="bg-darkBlue h-screen w-5/6 ">
                 <div className="search-container relative w-full flex justify-center items-center flex-col ">
                     <div className="relative z-10 w-full">
-                        <span className="absolute inset-y-0 left-0 bg-green-400 flex items-center text-black z-10 p-2">
+                        <span className="absolute inset-y-0 left-0 bg-tealBlue flex items-center text-black z-10 p-2">
                             symbol
                         </span>
                         <form 
@@ -463,7 +463,7 @@ function MainPage() {
                             />
                             <span className="absolute inset-y-0 right-0 flex items-center">
                                 <button 
-                                    className="z-10 bg-green-400 h-full p-2"
+                                    className="z-10 bg-tealBlue h-full p-2"
                                     type='submit'
                                 >
                                     search
@@ -474,8 +474,8 @@ function MainPage() {
                     </div>
                 </div>
 
-                <div className="stock-info mt-4 text-black w-full bg-blue-300 min-h-14 flex space-x-4 md:space-x-10">
-                    <div className="ticker-stock-info bg-red-300">
+                <div className="stock-info mt-4 text-white w-full  min-h-14 flex space-x-4 md:space-x-10">
+                    <div className="ticker-stock-info ">
                         <h1 className="text-2xl ml-2">
                             {ticker}
                             
@@ -484,24 +484,25 @@ function MainPage() {
                             {company}
                         </div>
                     </div>
-                    <div className="stock-price-info bg-yellow-300">
+                    <div className="stock-price-info ">
+                        <h1>Current</h1>
                         <h1 className="mt-1">
                             {currentPrice}
                         </h1>
                     </div>
-                    <div className="bid-ask-info bg-yellow-300 flex justify-center flex-col">
-                        <h1 className="bid bg-red-300 text-md">
+                    <div className="bid-ask-info  flex justify-center flex-col">
+                        <h1 className="bid  text-md">
                             Bid
                         </h1>
-                        <h1 className="bid bg-green-300 text-md">
+                        <h1 className="bid  text-md">
                             Ask
                         </h1>
                     </div>
-                    <div className="bid-ask-price-info bg-yellow-300 flex justify-center flex-col">
-                        <h1 className="bid bg-red-300 text-md">
+                    <div className="bid-ask-price-info  flex justify-center flex-col">
+                        <h1 className="bid bg-red-400 text-md rounded-md mb-1 px-1">
                             {bidPrice}
                         </h1>
-                        <h1 className="bid bg-green-300 text-md">
+                        <h1 className="ask bg-green-400 text-md rounded-md px-1 ">
                             {askPrice}
                         </h1>
                     </div>
@@ -511,7 +512,7 @@ function MainPage() {
                         <select
                             name="expiration"
                             id='expiration'
-                            className=''
+                            className='text-black rounded-md'
                             value={selectedExpiration}
                             onChange={handleExpirationChange}
                         >
@@ -532,9 +533,9 @@ function MainPage() {
                     </div>
                 </div>
 
-                <div className="strategy-container mt-14 min-h-6 bg-purple-400 flex items-center">
+                <div className="strategy-container mt-8 min-h-6  flex items-center">
                     <div className="text-box w-4/6 ">
-                        <h1 className=" ml-2 bg-orange-300 text-4xl">
+                        <h1 className=" ml-2  text-4xl text-white">
                             Select Strategy
                         </h1>
                     </div>
@@ -542,7 +543,7 @@ function MainPage() {
                     <select
                         name="strategy"
                         id="strategy"
-                        className="w-3/6 text-2xl h-8"
+                        className="w-3/6 text-2xl h-8 rounded-md"
                         value={selectedStrategy}
                         onChange={handleStrategyChange}
                         required
@@ -560,21 +561,21 @@ function MainPage() {
                     </select>
                 </div>
 
-                <div className="contract-container bg-green-500 p-4 overflow-x-auto">
+                <div className="contract-container  p-4 overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200 ">
                         <thead className="bg-gray-50  ">
                             <tr>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Select</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Call Bid</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Call Ask</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Call Delta</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Call IV</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-800 uppercase tracking-wider">Select</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-800 uppercase tracking-wider">Call Bid</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-800 uppercase tracking-wider">Call Ask</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-800 uppercase tracking-wider">Call Delta</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-800 uppercase tracking-wider">Call IV</th>
                                 
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider bg-yellow-200">Strike</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Put Bid</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Put Ask</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Put Delta</th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Put IV</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-800 uppercase tracking-wider bg-yellow-400">Strike</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-800 uppercase tracking-wider">Put Bid</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-800 uppercase tracking-wider">Put Ask</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-800 uppercase tracking-wider">Put Delta</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-800 uppercase tracking-wider">Put IV</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -592,7 +593,7 @@ function MainPage() {
                                     <td className="px-6 py-4 text-center">{option.call.ask || '-'}</td>
                                     <td className="px-6 py-4 text-center">{(option.call.delta).toFixed(2) || '-'}</td>
                                     <td className="px-6 py-4 text-center">{(option.call.iv).toFixed(2) || '-'}</td>
-                                    <td className="px-6 py-4 text-center bg-yellow-200">{option.strike}</td>
+                                    <td className="px-6 py-4 text-center bg-yellow-400">{option.strike}</td>
                                     <td className="px-6 py-4 text-center">{option.put.bid || '-'}</td>
                                     <td className="px-6 py-4 text-center">{option.put.ask || '-'}</td>
                                     <td className="px-6 py-4 text-center">{(option.put.delta).toFixed(2) || '-'}</td>
@@ -603,14 +604,14 @@ function MainPage() {
                     </table>
                 </div>
 
-                <div className=' breakeven-and-premium h-10 flex text-white bg-purple-400 mt-10 w-full items-center jus '>
-                    <h1 className='text-3xl ml-2 w-1/2 md:w-3/5 bg-yellow-300 '>
+                <div className=' breakeven-and-premium h-10 flex text-white mt-10 w-full items-center jus '>
+                    <h1 className='text-3xl ml-2 w-1/2 md:w-3/5  '>
                         Breakeven
                     </h1>
                     <div className="custom-bid-ask flex mr-2 ">
                         <span className='mr-2'>Bid</span>
                         <input
-                            className='ask bg-blue-500 w-16 h-6 mr-2'
+                            className='ask bg-gray-600 w-16 h-6 mr-2'
                             disabled={!(loggedIn && isSelling)}
                             onChange={handleCustomBid}
                             value={bidInputValue}
@@ -619,7 +620,7 @@ function MainPage() {
                         />
                         <span className='mr-2'>Ask</span>
                         <input
-                            className='ask bg-orange-500 w-16 h-6'
+                            className='ask bg-gray-600 w-16 h-6'
                             disabled={!(loggedIn && isBuying)}
                             onChange={handleCustomAsk}
                             value={AskInputValue}    
@@ -630,11 +631,11 @@ function MainPage() {
 
                 </div>
 
-                <div className="price-box contracts text-white bg-orange-300 flex items-center  w-full  ">
+                <div className="price-box contracts text-gray-300  flex items-center  w-full  ">
                     <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-2 '>
                         {` $ ${breakevenPrice} per share`}
                     </h1>
-                    <div className="button-box bg-green-300 w-1/2 md:w-2/5 flex items-center justify-center md:justify-start">
+                    <div className="button-box  w-1/2 md:w-2/5 flex items-center justify-center md:justify-start">
                         <button className='bg-gray-400 rounded-full text-xl w-24 md:w-1/2 h-8 ml-2 '
                         onClick={handleBackendRedirect}> Google</button>
                     </div>
@@ -644,28 +645,28 @@ function MainPage() {
                     
                 </div>
 
-                <div className="premium-box flex bg-blue-400 items-center mt-2">
-                    <h1 className='text-white text-3xl w-1/2 ml-2 md:w-3/5'>Premium</h1>
+                <div className="premium-box flex  items-center mt-2">
+                    <h1 className='text-gray-300 text-3xl w-1/2 ml-2 md:w-3/5'>Premium</h1>
                     <h2 className='text-white text-xl'>Num Contracts</h2>
                     
                 </div>
-                <div className="num-contracts-box flex  bg-gray-400">
-                    <h2 className='w-1/2 ml-2 text-2xl md:w-3/5'>{` $ ${premium * numContracts} per contract(s)`}</h2>
+                <div className="num-contracts-box flex  ">
+                    <h2 className='w-1/2 ml-2 text-2xl text-white md:w-3/5'>{` $ ${premium * numContracts} per contract(s)`}</h2>
                     <div className="number-box flex">
                             <button 
-                                className='text-xl bg-gray-300 w-8 h-8 text-center'
+                                className='text-xl bg-gray-300 w-8 h-8 text-center mr-1 rounded-md'
                                 onClick={handleDecrementClick}
                             >
                                 -
                             </button>
                             <input 
-                                className='bg-white text-black text-xl w-12 text-center'
+                                className='bg-white text-black text-xl w-12 text-center rounded-md'
                                 value={numContracts}
                                 type='text'
                                 onChange={handleInputChange}
                             />
                             <button 
-                                className='text-xl bg-gray-300 w-8 h-8 text-center'
+                                className='text-xl bg-gray-300 w-8 h-8 text-center ml-1 rounded-md'
                                 onClick={handleIncrementClick}
                             >
                                     +
