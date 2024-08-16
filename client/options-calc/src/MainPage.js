@@ -444,16 +444,21 @@ function MainPage() {
         } catch(err) {
             console.error('Error fetching data', err)
         }
+
+
+
+        on a medium to medium / large scren put the search bar next the stock data
+
         */
 
     };
 
     return (
         <div className="outer-container min-h-screen  flex justify-center items-center w-full">
-            <div className="bg-darkBlue h-full  w-5/6 border-2 border-gray-300 rounded-md ">
+            <div className=" h-full  w-5/6 border-2 border-gray-300 rounded-md ">
                 <div className="search-container  relative w-full flex justify-center items-center flex-col ">
                     <div className="relative z-10 w-full ">
-                        <span className="absolute inset-y-0 left-0 bg-tealBlue flex items-center text-black z-10 p-2">
+                        <span className="absolute inset-y-0 left-0 bg-gray-400 flex items-center text-black z-10 p-2">
                             symbol
                         </span>
                         <form 
@@ -461,7 +466,7 @@ function MainPage() {
                             onSubmit={handleSearchClick}
                         >
                             <input
-                                className="h-10 text-xl w-full mr-16 pl-20"
+                                className="h-10 text-xl w-full mr-16 pl-20 bg-gray-300"
                                 type="text"
                                 value ={tickerInput}
                                 onChange={(e) => setTickerInput(e.target.value)}
@@ -469,7 +474,7 @@ function MainPage() {
                             />
                             <span className="absolute inset-y-0 right-0 flex items-center">
                                 <button 
-                                    className="z-10 bg-tealBlue h-full p-2"
+                                    className="z-10 bg-gray-400 h-full p-2"
                                     type='submit'
                                 >
                                     search
@@ -480,11 +485,11 @@ function MainPage() {
                     </div>
                 </div>
 
-                <div className="stock-info mt-4 text-white w-full md:ml-4  min-h-14 flex space-x-4 md:space-x-10">
-                    <div className="ticker-stock-info ">
+                <div className="stock-info mt-4 text-black w-full md:ml-4  min-h-14 flex space-x-4 md:space-x-10">
+                    <div className="ticker-stock-info  ">
                         
-                            {ticker === '' ? <h1 className='text-md ml-2'>Ticker </h1> : <h1 className='text-2xl ml-2'>{ticker}</h1>}
-                        <div className="ml-2 text-xs">
+                            {ticker === '' ? <h1 className='text-md ml-2 '>Ticker </h1> : <h1 className='text-2xl ml-2'>{ticker}</h1>}
+                        <div className="ml-2 text-xs ">
                             {truncateToTwoWords(company)}
                             
                             
@@ -541,7 +546,7 @@ function MainPage() {
 
                 <div className="strategy-container mt-8 min-h-6  flex items-center">
                     <div className="text-box w-4/6 ">
-                        <h1 className=" ml-4  text-4xl text-white">
+                        <h1 className=" ml-4  text-4xl text-black">
                             Select Strategy
                         </h1>
                     </div>
@@ -549,7 +554,7 @@ function MainPage() {
                     <select
                         name="strategy"
                         id="strategy"
-                        className="w-3/6 text-2xl h-8 rounded-md mr-4"
+                        className="w-3/6 text-2xl h-8 rounded-md mr-4 bg-gray-300"
                         value={selectedStrategy}
                         onChange={handleStrategyChange}
                         required
@@ -611,22 +616,22 @@ function MainPage() {
                 </div>
 
                 <div className=' breakeven-and-premium h-10 flex text-gray-300 mt-10 w-full items-center jus '>
-                    <h1 className='text-3xl ml-4 w-1/2 md:w-3/5  '>
+                    <h1 className='text-3xl ml-4 w-1/2 md:w-3/5 text-black '>
                         Breakeven
                     </h1>
-                    <div className="custom-bid-ask flex mr-2  ">
-                        <span className='mr-2'>Bid</span>
+                    <div className="custom-bid-ask flex mr-2  text-black">
+                        <span className='mr-2 '>Bid</span>
                         <input
-                            className='ask bg-gray-600 w-16 h-6 mr-2'
+                            className='ask bg-gray-400 w-16 h-6 mr-2'
                             disabled={!(loggedIn && isSelling)}
                             onChange={handleCustomBid}
                             value={bidInputValue}
                             
                               
                         />
-                        <span className='mr-2'>Ask</span>
+                        <span className='mr-2 '>Ask</span>
                         <input
-                            className='ask bg-gray-600 w-16 h-6 mr-4'
+                            className='ask bg-gray-400 w-16 h-6 mr-4'
                             disabled={!(loggedIn && isBuying)}
                             onChange={handleCustomAsk}
                             value={AskInputValue}    
@@ -637,8 +642,8 @@ function MainPage() {
 
                 </div>
 
-                <div className="price-box contracts text-gray-300  flex items-center  w-full  ">
-                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-4 text-white '>
+                <div className="price-box contracts text-black flex items-center  w-full  ">
+                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-4 text-black '>
                         {` $ ${breakevenPrice} per share`}
                     </h1>
                     <div className="button-box  w-1/2 md:w-2/5 flex items-center justify-center md:justify-start">
@@ -654,17 +659,18 @@ function MainPage() {
                     
                 </div>
 
-                <div className="premium-box flex items-center mt-2">
-                    <h1 className='text-gray-300 text-3xl w-1/2  md:w-3/5 ml-4'>Premium</h1>
-                    <h2 className='text-white text-xl ml-8'>Num Contracts</h2>
+                <div className="premium-box flex items-center mt-2 text-black">
+                    <h1 className=' text-3xl w-1/2  md:w-3/5 ml-4'>Premium</h1>
+                    <h2 className=' text-xl ml-8'>Num Contracts</h2>
                     
                 </div>
-                <div className="num-contracts-box flex mb-4  ">
-                    <h2 className='w-1/2 text-2xl text-white md:w-3/5 ml-4 mr-4' >{` $ ${premium * numContracts} per contract(s)`}</h2>
+                <div className="num-contracts-box flex mb-4 text-black  ">
+                    <h2 className='w-1/2 text-2xl  md:w-3/5 ml-4 mr-4' >{` $ ${premium * numContracts} per contract(s)`}</h2>
                     <div className="number-box flex ml-5 md:ml-8">
                             <button 
                                 className='text-xl bg-gray-300 w-8 h-8 text-center rounded-md'
                                 onClick={handleDecrementClick}
+                                disabled={isSelling === false}
                             >
                                 -
                             </button>
@@ -673,10 +679,12 @@ function MainPage() {
                                 value={numContracts}
                                 type='text'
                                 onChange={handleInputChange}
+                                
                             />
                             <button 
                                 className='text-xl bg-gray-300 w-8 h-8 text-center  rounded-md'
                                 onClick={handleIncrementClick}
+                                disabled={isSelling === false}
                             >
                                     +
                             </button>
