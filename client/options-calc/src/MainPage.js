@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
+import GoogleSignInButton from './GoogleSignInButton';
 
 
 
@@ -636,8 +637,11 @@ function MainPage() {
                         {` $ ${breakevenPrice} per share`}
                     </h1>
                     <div className="button-box  w-1/2 md:w-2/5 flex items-center justify-center md:justify-start">
-                        <button className='bg-gray-400 rounded-full text-xl w-24 md:w-1/2 h-8 ml-2 '
-                        onClick={handleBackendRedirect}> Google</button>
+
+                        <GoogleSignInButton
+                            className=''
+                            handleBackendRedirect={handleBackendRedirect}
+                        />
                     </div>
 
                     
@@ -645,14 +649,14 @@ function MainPage() {
                     
                 </div>
 
-                <div className="premium-box flex  items-center mt-2">
+                <div className="premium-box flex items-center mt-2">
                     <h1 className='text-gray-300 text-3xl w-1/2 ml-2 md:w-3/5'>Premium</h1>
-                    <h2 className='text-white text-xl'>Num Contracts</h2>
+                    <h2 className='text-white text-xl ml-6'>Num Contracts</h2>
                     
                 </div>
-                <div className="num-contracts-box flex  ">
+                <div className="num-contracts-box flex ml ">
                     <h2 className='w-1/2 ml-2 text-2xl text-white md:w-3/5'>{` $ ${premium * numContracts} per contract(s)`}</h2>
-                    <div className="number-box flex">
+                    <div className="number-box flex ml-6 md:ml-8">
                             <button 
                                 className='text-xl bg-gray-300 w-8 h-8 text-center mr-1 rounded-md'
                                 onClick={handleDecrementClick}
