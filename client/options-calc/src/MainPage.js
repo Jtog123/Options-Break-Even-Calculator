@@ -614,7 +614,7 @@ function MainPage() {
                     <h1 className='text-3xl ml-4 w-1/2 md:w-3/5  '>
                         Breakeven
                     </h1>
-                    <div className="custom-bid-ask flex mr-2 ">
+                    <div className="custom-bid-ask flex mr-2  ">
                         <span className='mr-2'>Bid</span>
                         <input
                             className='ask bg-gray-600 w-16 h-6 mr-2'
