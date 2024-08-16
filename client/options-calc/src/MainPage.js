@@ -449,8 +449,8 @@ function MainPage() {
     };
 
     return (
-        <div className="outer-container min-h-screen bg-blue-200 flex justify-center items-center w-full">
-            <div className="bg-darkBlue  w-5/6 ">
+        <div className="outer-container min-h-screen  flex justify-center items-center w-full">
+            <div className="bg-darkBlue h-full  w-5/6 border-2 border-gray-300 rounded-md ">
                 <div className="search-container  relative w-full flex justify-center items-center flex-col ">
                     <div className="relative z-10 w-full ">
                         <span className="absolute inset-y-0 left-0 bg-tealBlue flex items-center text-black z-10 p-2">
@@ -518,7 +518,7 @@ function MainPage() {
                         <select
                             name="expiration"
                             id='expiration'
-                            className='text-black rounded-md'
+                            className='text-black rounded-md w-28 md:w-36'
                             value={selectedExpiration}
                             onChange={handleExpirationChange}
                         >
@@ -638,7 +638,7 @@ function MainPage() {
                 </div>
 
                 <div className="price-box contracts text-gray-300  flex items-center  w-full  ">
-                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-4 '>
+                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-4 text-white '>
                         {` $ ${breakevenPrice} per share`}
                     </h1>
                     <div className="button-box  w-1/2 md:w-2/5 flex items-center justify-center md:justify-start">
