@@ -454,6 +454,55 @@ function MainPage() {
     };
 
     /*
+
+                    <div className="custom-bid-ask flex mr-2  text-black">
+                        <span className='mr-2 '>Bid</span>
+                        <input
+                            className='ask bg-gray-400 w-16 h-6 mr-2'
+                            disabled={!(loggedIn && isSelling)}
+                            onChange={handleCustomBid}
+                            value={bidInputValue}
+                            
+                              
+                        />
+                        <span className='mr-2 '>Ask</span>
+                        <input
+                            className='ask bg-gray-400 w-16 h-6 mr-4'
+                            disabled={!(loggedIn && isBuying)}
+                            onChange={handleCustomAsk}
+                            value={AskInputValue}    
+                        />
+                    </div>
+
+
+
+
+                                    <div className="num-contracts-box flex mb-4 text-black  ">
+                    <h2 className='w-1/2 text-2xl  md:w-3/5 ml-4 mr-4' >{` $ ${premium * numContracts} per contract(s)`}</h2>
+                    <div className="number-box flex ml-5 md:ml-8">
+                            <button 
+                                className='text-xl bg-gray-200 w-8 h-8 text-center rounded-md cursor-pointer'
+                                onClick={handleDecrementClick}
+                                disabled={isSelling === false}
+                            >
+                                -
+                            </button>
+                            <input 
+                                className='bg-white text-black text-xl w-12 ml-1 mr-1  text-center rounded-md'
+                                value={numContracts}
+                                type='text'
+                                onChange={handleInputChange}
+                                
+                            />
+                            <button 
+                                className='text-xl bg-gray-200 w-8 h-8 text-center rounded-md cursor-pointer'
+                                onClick={handleIncrementClick}
+                                disabled={isSelling === false}
+                            >
+                                    +
+                            </button>
+                    </div>
+                </div>
     
     */
 
@@ -628,57 +677,34 @@ function MainPage() {
                     </table>
                 </div>
 
-                <div className=' breakeven-and-premium h-10 flex text-gray-300 mt-10 w-full items-center jus '>
+                <div className=' breakeven-and-premium h-10 flex text-gray-300 mt-10 w-full items-center '>
                     <h1 className='text-3xl ml-4 w-1/2 md:w-3/5 text-black '>
                         Breakeven
                     </h1>
+                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-4 text-black '>
+                        {` $ ${breakevenPrice} per share`}
+                    </h1>
+
+                </div>
 
 
-
-                    <div className="custom-bid-ask flex mr-2  text-black">
-                        <span className='mr-2 '>Bid</span>
-                        <input
-                            className='ask bg-gray-400 w-16 h-6 mr-2'
-                            disabled={!(loggedIn && isSelling)}
-                            onChange={handleCustomBid}
-                            value={bidInputValue}
-                            
-                              
-                        />
-                        <span className='mr-2 '>Ask</span>
-                        <input
-                            className='ask bg-gray-400 w-16 h-6 mr-4'
-                            disabled={!(loggedIn && isBuying)}
-                            onChange={handleCustomAsk}
-                            value={AskInputValue}    
-                        />
-                    </div>
-
+                <div className="premium-box flex items-center mt-2 text-black">
+                    <h1 className=' text-3xl w-1/2  md:w-3/5 ml-4'>Premium</h1>
+                    <h2 className='w-1/2 text-2xl mb-2  md:w-3/5 ml-4 ' >{` $ ${premium * numContracts} per contract(s)`}</h2>
                     
-
                 </div>
 
 
                 <div className="price-box contracts text-black flex items-center  w-full  ">
-                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-4 text-black '>
-                        {` $ ${breakevenPrice} per share`}
-                    </h1>
+
                     <div className="button-box  w-1/2 md:w-2/5 flex items-center justify-center md:justify-start">
 
-                        <GoogleSignInButton
-                            className=''
-                            handleBackendRedirect={handleBackendRedirect}
-                        />
                     </div>                  
                 </div>
 
-                <div className="premium-box flex items-center mt-2 text-black">
-                    <h1 className=' text-3xl w-1/2  md:w-3/5 ml-4'>Premium</h1>
-                    <h2 className=' text-xl ml-8'>Num Contracts</h2>
-                    
-                </div>
+
                 <div className="num-contracts-box flex mb-4 text-black  ">
-                    <h2 className='w-1/2 text-2xl  md:w-3/5 ml-4 mr-4' >{` $ ${premium * numContracts} per contract(s)`}</h2>
+                    <div className='w-1/2  lg:mr-2'></div>
                     <div className="number-box flex ml-5 md:ml-8">
                             <button 
                                 className='text-xl bg-gray-200 w-8 h-8 text-center rounded-md cursor-pointer'
@@ -703,6 +729,30 @@ function MainPage() {
                             </button>
                     </div>
                 </div>
+
+                <div className="custom-bid-ask flex flex-col ml-2 lg:ml-4 mr-2 text-black">
+                    <div className="inputs-container flex mb-2">
+                        <span className='mr-2 flex items-center'>Bid</span>
+                        <input
+                        className='ask bg-gray-400 w-16 h-6 mr-2'
+                        disabled={!(loggedIn && isSelling)}
+                        onChange={handleCustomBid}
+                        value={bidInputValue}
+                        />
+                        <span className='mr-2 flex items-center'>Ask</span>
+                        <input
+                        className='ask bg-gray-400 w-16 h-6 mr-4'
+                        disabled={!(loggedIn && isBuying)}
+                        onChange={handleCustomAsk}
+                        value={AskInputValue}    
+                        />
+                    </div>
+                    <div className="google-button-container mt-2">
+                        <GoogleSignInButton 
+                        handleBackendRedirect={handleBackendRedirect}
+                        />
+                    </div>
+                    </div>
 
             </div>
         </div>
