@@ -691,7 +691,7 @@ function MainPage() {
 
                 <div className="premium-box flex items-center mt-2 text-black">
                     <h1 className=' text-3xl w-1/2  md:w-3/5 ml-4 lg:ml-16 lg:w-1/2'>Premium</h1>
-                    <h2 className='w-1/2 text-2xl mb-2  md:w-3/5 ml-4 lg:ml-2 ' >{` $ ${premium * numContracts}`}
+                    <h2 className='w-1/2 text-2xl mb-2  md:w-3/5 ml-4 lg:ml-2 ' >{` $ ${premium * numContracts * 100}`}
                         <span className=' ml-2 text-sm'>per contract(s)</span>
                     </h2>
 
