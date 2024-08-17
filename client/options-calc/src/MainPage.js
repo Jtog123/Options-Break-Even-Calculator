@@ -453,95 +453,108 @@ function MainPage() {
 
     };
 
+    /*
+    
+    */
+
     return (
         <div className="outer-container min-h-screen  flex justify-center items-center w-full">
             <div className=" h-full  w-5/6 border-2 border-gray-300 rounded-md ">
-                <div className="search-container  relative w-full flex justify-center items-center flex-col ">
-                    <div className="relative z-10 w-full ">
-                        <span className="absolute inset-y-0 left-0 bg-gray-400 flex items-center text-black z-10 p-2">
-                            symbol
-                        </span>
-                        <form 
-                            action=""
-                            onSubmit={handleSearchClick}
-                        >
-                            <input
-                                className="h-10 text-xl w-full mr-16 pl-20 bg-gray-300"
-                                type="text"
-                                value ={tickerInput}
-                                onChange={(e) => setTickerInput(e.target.value)}
-                                required
-                            />
-                            <span className="absolute inset-y-0 right-0 flex items-center">
-                                <button 
-                                    className="z-10 bg-gray-400 h-full p-2"
-                                    type='submit'
+            
+                <div className="container-wraper flex flex-col lg:flex-row w-full">
+                    <div className="search-container relative w-full flex justify-center items-center flex-col ">
+                            <div className="relative z-10 w-full lg:ml-4  ">
+                                <span className="absolute inset-y-0  left-0 bg-gray-300 flex items-center text-black z-10 p-2 ">
+                                    symbol
+                                </span>
+                                <form 
+                                    action=""
+                                    onSubmit={handleSearchClick}
+                                    className=''
                                 >
-                                    search
-                                </button>
-                            </span>
-                        </form>
+                                    <input
+                                        className="ticker-search h-10 text-xl  w-full mr-16 pl-20 bg-gray-200  "
+                                        type="text"
+                                        value ={tickerInput}
+                                        onChange={(e) => setTickerInput(e.target.value)}
+                                        required
+                                    />
+                                    <span className="absolute inset-y-0 right-0 flex items-center ">
+                                        <button 
+                                            className="z-10 bg-gray-300 h-full p-2 right-0 ml-48"
+                                            type='submit'
+                                        >
+                                            search
+                                        </button>
+                                    </span>
+                                </form>
 
+                            </div>
                     </div>
-                </div>
 
-                <div className="stock-info mt-4 text-black w-full md:ml-4  min-h-14 flex space-x-4 md:space-x-10">
-                    <div className="ticker-stock-info  ">
-                        
-                            {ticker === '' ? <h1 className='text-md ml-2 '>Ticker </h1> : <h1 className='text-2xl ml-2'>{ticker}</h1>}
-                        <div className="ml-2 text-xs ">
-                            {truncateToTwoWords(company)}
+                    <div className="stock-info mt-4 text-black w-full md:ml-4  min-h-14 flex space-x-4 md:space-x-10">
+                        <div className="ticker-stock-info  ">
                             
-                            
+                                {ticker === '' ? <h1 className='text-md ml-2 '>Ticker </h1> : <h1 className='text-2xl ml-2'>{ticker}</h1>}
+                            <div className="ml-2 text-xs ">
+                                {truncateToTwoWords(company)}
+                                
+                                
+                            </div>
                         </div>
-                    </div>
-                    <div className="stock-price-info ">
-                        <h1>Current</h1>
-                        <h1 className="mt-1">
-                            {currentPrice}
-                        </h1>
-                    </div>
-                    <div className="bid-ask-info  flex justify-center flex-col ">
-                        <h1 className="bid  text-md">
-                            Bid
-                        </h1>
-                        <h1 className="bid  text-md">
-                            Ask
-                        </h1>
-                    </div>
-                    <div className="bid-ask-price-info  flex justify-center flex-col">
-                        <h1 className="bid bg-red-400 text-md rounded-md mb-1 px-1">
-                            {bidPrice}
-                        </h1>
-                        <h1 className="ask bg-green-400 text-md rounded-md px-1 ">
-                            {askPrice}
-                        </h1>
-                    </div>
+                        <div className="stock-price-info ">
+                            <h1>Current</h1>
+                            <h1 className="mt-1">
+                                {currentPrice}
+                            </h1>
+                        </div>
+                        <div className="bid-ask-info  flex justify-center flex-col ">
+                            <h1 className="bid  text-md">
+                                Bid
+                            </h1>
+                            <h1 className="bid  text-md">
+                                Ask
+                            </h1>
+                        </div>
+                        <div className="bid-ask-price-info  flex justify-center flex-col">
+                            <h1 className="bid bg-red-400 text-md rounded-md mb-1 px-1">
+                                {bidPrice}
+                            </h1>
+                            <h1 className="ask bg-green-400 text-md rounded-md px-1 ">
+                                {askPrice}
+                            </h1>
+                        </div>
 
-                    <div className="expiration-container">
-                        <h1 className='mb-1'>Expirations</h1>
-                        <select
-                            name="expiration"
-                            id='expiration'
-                            className='text-black rounded-md w-28 md:w-36'
-                            value={selectedExpiration}
-                            onChange={handleExpirationChange}
-                        >
-                            <option 
-                            value="" 
-                            disabled>
-                                Select Expiration
-                            </option>
-                            {expirations.map((expiration) => (
-                                <option
-                                    key={expiration}
-                                    value={expiration}
+                        <div className="expiration-container">
+                            <h1 className='mb-1'>Expirations</h1>
+                            <select
+                                name="expiration"
+                                id='expiration'
+                                className='text-black rounded-md w-28 md:w-36 bg-gray-200 cursor-pointer'
+                                value={selectedExpiration}
+                                onChange={handleExpirationChange}
+                            >
+                                <option 
+                                value="" 
+                                disabled
+                                className='bg-gray-200'
                                 >
-                                    {expiration}
+                                    Select Expiration
                                 </option>
-                            ))}
-                        </select>
+                                {expirations.map((expiration) => (
+                                    <option
+                                        key={expiration}
+                                        value={expiration}
+                                        className='bg-gray-300'
+                                    >
+                                        {expiration}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>                
+
                     </div>
+                    
                 </div>
 
                 <div className="strategy-container mt-8 min-h-6  flex items-center">
@@ -554,7 +567,7 @@ function MainPage() {
                     <select
                         name="strategy"
                         id="strategy"
-                        className="w-3/6 text-2xl h-8 rounded-md mr-4 bg-gray-300"
+                        className="w-3/6 text-2xl h-8 rounded-md mr-4 bg-gray-200 cursor-pointer shadow-sm"
                         value={selectedStrategy}
                         onChange={handleStrategyChange}
                         required
@@ -574,7 +587,7 @@ function MainPage() {
 
                 <div className="contract-container  p-4 overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200 ">
-                        <thead className="bg-gray-50  ">
+                        <thead className="bg-gray-200  ">
                             <tr>
                                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-800 uppercase tracking-wider">Select</th>
                                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-800 uppercase tracking-wider">Call Bid</th>
@@ -619,6 +632,9 @@ function MainPage() {
                     <h1 className='text-3xl ml-4 w-1/2 md:w-3/5 text-black '>
                         Breakeven
                     </h1>
+
+
+
                     <div className="custom-bid-ask flex mr-2  text-black">
                         <span className='mr-2 '>Bid</span>
                         <input
@@ -642,6 +658,7 @@ function MainPage() {
 
                 </div>
 
+
                 <div className="price-box contracts text-black flex items-center  w-full  ">
                     <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-4 text-black '>
                         {` $ ${breakevenPrice} per share`}
@@ -652,11 +669,7 @@ function MainPage() {
                             className=''
                             handleBackendRedirect={handleBackendRedirect}
                         />
-                    </div>
-
-                    
-
-                    
+                    </div>                  
                 </div>
 
                 <div className="premium-box flex items-center mt-2 text-black">
@@ -668,7 +681,7 @@ function MainPage() {
                     <h2 className='w-1/2 text-2xl  md:w-3/5 ml-4 mr-4' >{` $ ${premium * numContracts} per contract(s)`}</h2>
                     <div className="number-box flex ml-5 md:ml-8">
                             <button 
-                                className='text-xl bg-gray-300 w-8 h-8 text-center rounded-md'
+                                className='text-xl bg-gray-200 w-8 h-8 text-center rounded-md cursor-pointer'
                                 onClick={handleDecrementClick}
                                 disabled={isSelling === false}
                             >
@@ -682,7 +695,7 @@ function MainPage() {
                                 
                             />
                             <button 
-                                className='text-xl bg-gray-300 w-8 h-8 text-center  rounded-md'
+                                className='text-xl bg-gray-200 w-8 h-8 text-center rounded-md cursor-pointer'
                                 onClick={handleIncrementClick}
                                 disabled={isSelling === false}
                             >
