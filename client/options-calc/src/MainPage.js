@@ -681,7 +681,7 @@ function MainPage() {
                     <h1 className='text-3xl ml-4 w-1/2 md:w-3/5 lg:w-1/2 text-black lg:ml-16 '>
                         Breakeven
                     </h1>
-                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-4 mg:ml-2 text-black '>
+                    <h1 className=' breakeven-box text-2xl w-1/2 md:w-3/5 ml-4 lg:ml-2 text-black '>
                         {` $ ${breakevenPrice} ` }
                         <span className='text-sm'> per share</span>
                     </h1>
