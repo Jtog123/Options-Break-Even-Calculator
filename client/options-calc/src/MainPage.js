@@ -151,16 +151,12 @@ function MainPage() {
         setNumContracts(value);
     */
 
+    //Next sell Covered calls and buy protective puts
     const strategies = {
         "Buy Call(s)": 1,
         "Buy Put(s)": 1,
         "Sell Call(s)": 1,
         "Sell Put(s)": 1,
-        "Sell Covered Call(s)": 1,
-        "Buy Protective Put(s)": 1,        
-        "Vertical Spread": 2,
-        "Butterfly Spread": 3,
-        "Iron Condor": 4,
     };
 
     /*
@@ -631,6 +627,12 @@ function MainPage() {
                         {Object.keys(strategies).map(strategy => (
                             <option key={strategy} value={strategy}>{strategy}</option>
                         ))}
+
+                        <option
+                            disabled
+                        >
+                            More Coming Soon
+                        </option>
                     </select>
                 </div>
 
