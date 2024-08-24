@@ -740,14 +740,15 @@ function MainPage() {
                 <div className="inputs-container flex mb-2">
                     <span className='mr-2 flex items-center'>Bid</span>
                     <input
-                    className='ask bg-gray-400 w-16 h-6 mr-2'
+                    className={`ask  w-16 h-6 mr-2 ${(loggedIn && isSelling) ? 'bg-gray-200' : 'bg-gray-400'}`}
                     disabled={!(loggedIn && isSelling)}
                     onChange={handleCustomBid}
                     value={bidInputValue}
+                    
                     />
                     <span className='mr-2 flex items-center'>Ask</span>
                     <input
-                    className='ask bg-gray-400 w-16 h-6 mr-4'
+                    className={`ask  w-16 h-6 mr-4 ${(loggedIn && isBuying) ? 'bg-gray-200' : 'bg-gray-400'}`}
                     disabled={!(loggedIn && isBuying)}
                     onChange={handleCustomAsk}
                     value={AskInputValue}    
