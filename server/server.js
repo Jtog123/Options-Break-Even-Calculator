@@ -21,7 +21,7 @@ const pool = new Pool({
     user: process.env.POSTGRES_USER,
     host: 'db', // Adjust this if using Docker or other setup
     database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASSWORD, // Make sure to include the password
+    password: process.env.POSTGRES_PASSWORD, 
     port: 5432
 });
 
@@ -29,7 +29,7 @@ const pool = new Pool({
 app.use(express.json());
 
 app.use(session({
-    secret: 'your-session-secret', // Replace with a strong secret
+    secret: 'my-session-secret', // Replace with a strong secret
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false } // Set to true if using HTTPS
@@ -92,14 +92,11 @@ passport.use(
 router.get('/auth/google', passport.authenticate('google', {scope: ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email']}))
 
 router.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/auth/failure'}), (req, res) => {
-        // Successful authentication, redirect to your desired route
-        //res.redirect('/protected')
-        //res.redirect('/conversation')
         res.redirect('http://localhost:3000'); // Redirect to the client-side route
 })
 
 router.get('/auth/failure', (req, res) => {
-    res.send("Failed to authenticate, some went wrong")
+    res.send("Failed to authenticate, something went wrong")
 })
 
 router.post('/input', async (req, res) => {
@@ -170,8 +167,7 @@ router.post('/input', async (req, res) => {
             
         });
 
-        //const chainResponse = await axios.get('https://sandbox.tradier.com/v1/markets/options/chains')
-        //console.log(chainResponse)
+
         
     } catch (err) {
         console.error('Sorry error', err)
@@ -220,7 +216,7 @@ router.post('/expirations', async (req, res) => {
                 'Accept': 'application/json'
             }
         })
-        //console.log(response.data)
+
         optionsChain = response.data.options.option;
 
         const strikeFilteredOptions = optionsChain.filter(option => {
@@ -228,7 +224,7 @@ router.post('/expirations', async (req, res) => {
             return Math.abs(strikePrice - stockPrice) <= 5;
         });
 
-        //console.log(strikeFilteredOptions[0]);
+
 
         const filteredOptions = strikeFilteredOptions.map(option => ({
             type: option.option_type,
@@ -244,16 +240,7 @@ router.post('/expirations', async (req, res) => {
         console.log(filteredOptions);
 
         res.json({options: filteredOptions});
-        
 
-
-        
-
-        // we need to determine the options strike price, to determine its row
-        // We need to determine if option is a call or a put
-        // we need to send it expiration back
-        //whether put or call we need to send back its bid, ask, delta, IV (which one?), and its strike
-        // We need to determine if its a standard or a weeklys
     } catch (err) {
         console.error(err)
     }

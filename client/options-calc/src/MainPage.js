@@ -3,20 +3,6 @@ import axios from 'axios'
 import GoogleSignInButton from './GoogleSignInButton';
 
 
-
-/*
-On a search get Symbol data and option chain data
-If ticker doesnt exist note couldnt find ticker
-
-On click, send get request to tradier for the ticker symbol and the option chain
-do i need to use axios to make this request
-
-
-
-disabled if selectedStrategy === ""
-
-*/
-
 function MainPage() {
     const [selectedStrategy, setSelectedStrategy] = useState("");
 
@@ -124,32 +110,24 @@ function MainPage() {
 
             const customBidValue = parseFloat(value);
 
-            if(optionsData.length > 0) { 
-                const selectedOption = optionsData.find(option => option.strike === selectedContracts[0]);
-                if(selectedOption) {
-                    const breakEven = selectedOption.strike + customBidValue;
-                    setBreakevenPrice(breakEven);
-                    setPremium(customBidValue);
-                }
+            if(!isNaN(customBidValue)) {
+                setCustomBid(customBidValue)
 
+                if(optionsData.length > 0) { 
+                    const selectedOption = optionsData.find(option => option.strike === selectedContracts[0]);
+                    if(selectedOption) {
+                        const breakEven = selectedOption.strike + customBidValue;
+                        setBreakevenPrice(breakEven);
+                        setPremium(customBidValue);
+                    }
+    
+                }
             }
 
         }
     }
 
 
-
-    /*
-            let value = parseInt(e.target.value, 10);
-        if(isNaN(value)) {
-            value = 1;
-        } else if(value < 1) {
-            value = 1;
-        } else if (value > 999) {
-            value = 999
-        }
-        setNumContracts(value);
-    */
 
     //Next sell Covered calls and buy protective puts
     const strategies = {
@@ -158,15 +136,6 @@ function MainPage() {
         "Sell Call(s)": 1,
         "Sell Put(s)": 1,
     };
-
-    /*
-    Selling the call the premium you take in is the bid
-    Bid: 4.65 premium: $465
-    Need to the stock 
-    strike $265 + $4.65 premium = breakeven 
-    anything aboev that i get losses on
-    anything below it i get to keep the premium
-    */
 
 
 
@@ -209,9 +178,6 @@ function MainPage() {
 
     };
 
-    /*
-    when nothing checkmarked breakeven and premium should go to zero
-    */
 
     //Every time we change the checkbox calculate a new breakeven
     useEffect(() => {
@@ -225,20 +191,6 @@ function MainPage() {
 
     const calculateBreakeven = () => {
         //console.log('strike is ', strikePrice);
-        //console.log('options data issss', optionsData);
-
-        //contractId is also the strike price
-        // iterate through the optionData find the contract whose strike price matches the selected contracts strike price
-
-        /*
-        ok so issues unresolved:
-            how do we select contracts for more complicated strats?
-            conditionally enable/ disable components based on the strategy
-            if selling note a premium recieved
-            if logged in allow users to: make custom bids and asks, then calc for them
-            Stylize the app
-        */
-
 
         let selling = false;
         let buying = false;
@@ -246,10 +198,7 @@ function MainPage() {
             const option = optionsData.find(option => option.strike === contractId);
             let breakEven;
             if(option && selectedStrategy === 'Buy Call(s)') {
-                console.log('Buying dem calls at strkke ', option);
-                // calculate breakeven use the options ask
-                // users can set custom asks
-                //strike + premium paid , ask is premium
+                console.log('Buying calls at strike ', option);
                 breakEven = contractId + option.call.ask;
                 buying = true;
                 selling = false;
@@ -278,11 +227,9 @@ function MainPage() {
 
     }
 
-    // split these organizeOptionChainResponse(optionChain);
 
     const handleExpirationChange = async (e) => {
         //once we set the expiration we send a request over with the ticker and the expiration and retreieve the option chain
-
         const newExpiration = e.target.value;
         setSelectedExpiration(newExpiration);
         setBreakevenPrice(0);
@@ -310,9 +257,7 @@ function MainPage() {
         
     }
 
-    /*
-    This function decomposes the option chain response into its usable parts, it uses reduce which does ..., and then sets the option data and prepares it for rendering on the front end
-    */
+
     function organizeOptionChainResponse(optionChain) {
 
         const organizedOptions = optionChain.reduce((acc, option) => {
@@ -334,9 +279,7 @@ function MainPage() {
         }, {});
 
         setOptionsData(Object.values(organizedOptions));
-        //setOptionsData(response.data);  
         console.log('option data contains', optionsData);    
-        //console.log("Option chain data:", response.data);
     }
 
 
@@ -371,27 +314,7 @@ function MainPage() {
         setNumContracts(value);
     }
 
-    /*
-    To do:
-    ok so if ticker change option screen should clear
-    also now that we have our respective data from the options chain
-    we can begin to calculate the breakeven prices
-    from at least Buy Calls and Buy Puts
-    Before we can select a checkbox we must select a strategy (selectedStrat)
-    show an alert if the user has not selected strat
-    if selectedStrat != null you can check a box
 
-    if the selected strat is buy calls
-    use call info
-    if its buy puts use put info 
-    How do we now select only the call info 
-    will this work for more complicated strategies?
-    dont know
-    two selects one for select call
-    one for select put?
-
-    have it build a graph as user uses it???? after MVP
-    */
     const truncateToTwoWords = (text) => {
         const words = text.split(' ');
         return words.slice(0, 2).join(' ');
@@ -414,9 +337,8 @@ function MainPage() {
                 setTicker(res.data['ticker']);
                 setCompany(res.data['companyName']);
                 setCurrentPrice(res.data['currentPrice']);
-                //const expirationsData = Array(Object.values(res.data['expirations']))
+
                 setExpirations(Object.values(res.data['expirations']));
-                //console.log(expirations)
                 
                 setBidPrice(res.data['bidPrice']);
                 setAskPrice(res.data['askPrice']);
@@ -429,78 +351,11 @@ function MainPage() {
             console.error('Error fetching data')
         }
         
-        
-        //only after we get a response with the ticker should we set
-        // the ticker symbol and load the option chain, dont set it as user is tpying
 
-        /*
-        try {
-            const data = await fetchData();
-            console.log(data);
-        } catch(err) {
-            console.error('Error fetching data', err)
-        }
-
-
-
-        on a medium to medium / large scren put the search bar next the stock data
-
-        */
 
     };
 
-    /*
 
-                    <div className="custom-bid-ask flex mr-2  text-black">
-                        <span className='mr-2 '>Bid</span>
-                        <input
-                            className='ask bg-gray-400 w-16 h-6 mr-2'
-                            disabled={!(loggedIn && isSelling)}
-                            onChange={handleCustomBid}
-                            value={bidInputValue}
-                            
-                              
-                        />
-                        <span className='mr-2 '>Ask</span>
-                        <input
-                            className='ask bg-gray-400 w-16 h-6 mr-4'
-                            disabled={!(loggedIn && isBuying)}
-                            onChange={handleCustomAsk}
-                            value={AskInputValue}    
-                        />
-                    </div>
-
-
-
-
-                                    <div className="num-contracts-box flex mb-4 text-black  ">
-                    <h2 className='w-1/2 text-2xl  md:w-3/5 ml-4 mr-4' >{` $ ${premium * numContracts} per contract(s)`}</h2>
-                    <div className="number-box flex ml-5 md:ml-8">
-                            <button 
-                                className='text-xl bg-gray-200 w-8 h-8 text-center rounded-md cursor-pointer'
-                                onClick={handleDecrementClick}
-                                disabled={isSelling === false}
-                            >
-                                -
-                            </button>
-                            <input 
-                                className='bg-white text-black text-xl w-12 ml-1 mr-1  text-center rounded-md'
-                                value={numContracts}
-                                type='text'
-                                onChange={handleInputChange}
-                                
-                            />
-                            <button 
-                                className='text-xl bg-gray-200 w-8 h-8 text-center rounded-md cursor-pointer'
-                                onClick={handleIncrementClick}
-                                disabled={isSelling === false}
-                            >
-                                    +
-                            </button>
-                    </div>
-                </div>
-    
-    */
 
     return (
         <div className="outer-container min-h-screen  flex justify-center items-center w-full">
